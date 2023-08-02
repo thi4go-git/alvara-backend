@@ -18,5 +18,4 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .anyRequest().denyAll();
     }
 
-
 }
