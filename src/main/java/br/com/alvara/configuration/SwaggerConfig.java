@@ -28,7 +28,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("API Alvará WEB")
                 .description("API de Alvarás")
-                .version("1.0")
+                .version("02/08/2023")
                 .contact(contact())
                 .build();
     }

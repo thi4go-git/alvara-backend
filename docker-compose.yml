@@ -7,8 +7,8 @@ services:
             context: .
             dockerfile: Dockerfile
             args:
-                - JAR_FILE=target/alvara-1.0.jar
-                - CONTEXT=alvara-api
+                - JAR_FILE=target/alvara-backend-1.0.jar
+                - CONTEXT=alvara-backend
         ports:
             - 8090:8080
         restart: always
