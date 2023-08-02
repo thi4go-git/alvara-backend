@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: production
+  application:
+    name: Sistema de Alvarás WEB
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+security:
+  oauth2:
+    client:
+      scope: password
+  jwt:
+    signing-key: cm9uYWxkaW5obw==
+    expiration_token_minutes: 30
