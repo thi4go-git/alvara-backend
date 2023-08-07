@@ -4,6 +4,8 @@ import br.com.alvara.model.tipo.TipoDocumento;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +14,9 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 public class Pdf {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Pdf.class);
+
 
     final static String NAO_ENCONTRADO = "Não Localizado!";
 
@@ -43,7 +48,7 @@ public class Pdf {
                 return arquivo;
             }
         } catch (IOException e) {
-            System.out.println(e.getCause());
+            LOG.info(e.toString());
         }
         return new Arquivo(bytes);
     }
@@ -51,7 +56,12 @@ public class Pdf {
     public File byteTofile(byte[] bytesArquivo, String nome) {
         File pdfExistente = new File(nome);
         if (pdfExistente.exists()) {
-            pdfExistente.delete();
+            if (pdfExistente.delete()) {
+                System.out.println("");
+                LOG.info("Arquivo excluído com sucesso.");
+            } else {
+                LOG.info("Falha ao excluir o arquivo.");
+            }
         }
         File file;
         try {
