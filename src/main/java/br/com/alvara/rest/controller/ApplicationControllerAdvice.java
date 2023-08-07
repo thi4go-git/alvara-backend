@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ApplicationControllerAdvice {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)//captura erros
-    @ResponseStatus(HttpStatus.BAD_REQUEST) // retornará Cód 400
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrors handleValidationErros(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         List<String> messages = bindingResult.getAllErrors()

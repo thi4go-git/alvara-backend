@@ -54,13 +54,13 @@ public class ArquivoServiceImpl implements ArquivoService {
                     findById(id)
                     .map(achado -> {
 
-                        achado.setTipo_doc(novo.getTipo_doc());
-                        achado.setNome_arquivo(novo.getNome_arquivo());
-                        achado.setNumero_alvara(novo.getNumero_alvara());
-                        achado.setNome_empresa(novo.getNome_empresa());
-                        achado.setCnpj_empresa(novo.getCnpj_empresa());
-                        achado.setData_emissao(novo.getData_emissao());
-                        achado.setData_vencimento(novo.getData_vencimento());
+                        achado.setTipoDoc(novo.getTipoDoc());
+                        achado.setNomeArquivo(novo.getNomeArquivo());
+                        achado.setNumeroAlvara(novo.getNumeroAlvara());
+                        achado.setNomeEmpresa(novo.getNomeEmpresa());
+                        achado.setCnpjEmpresa(novo.getCnpjEmpresa());
+                        achado.setDataEmissao(novo.getDataEmissao());
+                        achado.setDataVencimento(novo.getDataVencimento());
                         achado.setPdf(novo.getPdf());
 
                         return arquivoRepository.save(achado);
@@ -128,8 +128,8 @@ public class ArquivoServiceImpl implements ArquivoService {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<ArquivoProjection> resultadoPaginado = arquivoRepository
-                .buscarArquivosPaginados(dto.getCnpj_empresa().trim(), dto.getNome_empresa().trim(),
-                        dto.getNumero_alvara().trim(), dto.getNome_arquivo().trim(), pageable);
+                .buscarArquivosPaginados(dto.getCnpjEmpresa().trim(), dto.getNomeEmpresa().trim(),
+                        dto.getNumeroAlvara().trim(), dto.getNomeArquivo().trim(), pageable);
 
         return resultadoPaginado;
     }
@@ -143,7 +143,7 @@ public class ArquivoServiceImpl implements ArquivoService {
                 "EXPIRA");
         List<ArquivoProjection> lista = new ArrayList<>();
         for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
-            if (arquivo.getData_vencimento() != null && arquivo.getExpira() <= 0) {
+            if (arquivo.getDataVencimento() != null && arquivo.getExpira() <= 0) {
                 lista.add(arquivo);
             }
         }
@@ -177,7 +177,7 @@ public class ArquivoServiceImpl implements ArquivoService {
                 "EXPIRA");
         List<ArquivoProjection> lista = new ArrayList<>();
         for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
-            if (arquivo.getData_vencimento() == null) {
+            if (arquivo.getDataVencimento() == null) {
                 lista.add(arquivo);
             }
         }
@@ -215,13 +215,13 @@ public class ArquivoServiceImpl implements ArquivoService {
                 findById(dto.getId())
                 .map(clienteAchado -> {
 
-                    clienteAchado.setTipo_doc(dto.getTipo_doc());
-                    clienteAchado.setNome_arquivo(dto.getNome_arquivo());
-                    clienteAchado.setNumero_alvara(dto.getNumero_alvara());
-                    clienteAchado.setNome_empresa(dto.getNome_empresa());
-                    clienteAchado.setCnpj_empresa(dto.getCnpj_empresa());
-                    clienteAchado.setData_emissao(dto.getData_emissao());
-                    clienteAchado.setData_vencimento(dto.getData_vencimento());
+                    clienteAchado.setTipoDoc(dto.getTipoDoc());
+                    clienteAchado.setNomeArquivo(dto.getNomeArquivo());
+                    clienteAchado.setNumeroAlvara(dto.getNumeroAlvara());
+                    clienteAchado.setNomeEmpresa(dto.getNomeEmpresa());
+                    clienteAchado.setCnpjEmpresa(dto.getCnpjEmpresa());
+                    clienteAchado.setDataEmissao(dto.getDataEmissao());
+                    clienteAchado.setDataVencimento(dto.getDataVencimento());
                     clienteAchado.setObservacao(dto.getObservacao());
 
                     return arquivoRepository.save(clienteAchado);

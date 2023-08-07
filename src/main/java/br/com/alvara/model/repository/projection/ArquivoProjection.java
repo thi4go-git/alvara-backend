@@ -8,19 +8,19 @@ import java.time.LocalDate;
 public interface ArquivoProjection {
     Long getId();
 
-    TipoDocumento getTipo_doc();
+    TipoDocumento getTipoDoc();
 
-    String getNome_arquivo();
+    String getNomeArquivo();
 
-    String getNumero_alvara();
+    String getNumeroAlvara();
 
-    String getNome_empresa();
+    String getNomeEmpresa();
 
-    String getCnpj_empresa();
+    String getCnpjEmpresa();
 
-    LocalDate getData_emissao();
+    LocalDate getDataEmissao();
 
-    LocalDate getData_vencimento();
+    LocalDate getDataVencimento();
 
     Integer getExpira();
 

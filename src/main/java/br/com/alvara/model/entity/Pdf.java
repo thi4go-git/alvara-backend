@@ -36,14 +36,14 @@ public class Pdf {
                     txt = txt + line.toUpperCase(Locale.ROOT);
                 }
                 arquivo.setPdf(bytes);
-                arquivo.setNome_arquivo(pdf.getName());
-                arquivo.setTipo_doc(retornarTipoDocumento(txt));
-                arquivo.setNumero_alvara(retornarNumeroDocumento(txt));
-                arquivo.setNome_empresa(retornarNomeEmpresa(txt));
-                arquivo.setCnpj_empresa(retornarCnpj(txt, arquivo.getTipo_doc()));
-                arquivo.setData_emissao(retornarDtEmissao(txt, arquivo.getTipo_doc()));
-                arquivo.setData_vencimento(retornarDtVencimento(txt, arquivo.getTipo_doc(),
-                        arquivo.getData_emissao()));
+                arquivo.setNomeArquivo(pdf.getName());
+                arquivo.setTipoDoc(retornarTipoDocumento(txt));
+                arquivo.setNumeroAlvara(retornarNumeroDocumento(txt));
+                arquivo.setNomeEmpresa(retornarNomeEmpresa(txt));
+                arquivo.setCnpjEmpresa(retornarCnpj(txt, arquivo.getTipoDoc()));
+                arquivo.setDataEmissao(retornarDtEmissao(txt, arquivo.getTipoDoc()));
+                arquivo.setDataVencimento(retornarDtVencimento(txt, arquivo.getTipoDoc(),
+                        arquivo.getDataEmissao()));
 
                 return arquivo;
             }

@@ -2,7 +2,6 @@ package br.com.alvara.rest.controller;
 
 import br.com.alvara.model.entity.Arquivo;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
-import br.com.alvara.model.repository.projection.impl.ArquivoProjectionImpl;
 import br.com.alvara.model.tipo.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
 import br.com.alvara.service.implementation.ArquivoServiceImpl;

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,30 +20,30 @@ public class Arquivo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "tipo_doc")
+    private TipoDocumento tipoDoc;
+
+    @Column(name = "nome_arquivo", length = 150)
+    private String nomeArquivo;
+
+    @Column(name = "numero_alvara", length = 50)
+    private String numeroAlvara;
+
+    @Column(name = "nome_empresa", length = 50)
+    private String nomeEmpresa;
+
+    @Column(name = "cnpj_empresa", length = 14)
+    private String cnpjEmpresa;
+
+    @Column(name = "data_emissao")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataEmissao;
+
+    @Column(name = "data_vencimento")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataVencimento;
+
     @Column
-    private TipoDocumento tipo_doc;
-
-    @Column(length = 150)
-    private String nome_arquivo;
-
-    @Column(length = 50)
-    private String numero_alvara;
-
-    @Column(length = 50)
-    private String nome_empresa;
-
-    @Column(length = 14)
-    private String cnpj_empresa;
-
-    @Column(nullable = true)
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data_emissao;
-
-    @Column(nullable = true)
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data_vencimento;
-
-    @Column(nullable = true)
     private Integer expira;
 
     @Column(nullable = false)

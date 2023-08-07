@@ -3,7 +3,6 @@ package br.com.alvara.model.repository;
 import br.com.alvara.model.entity.Arquivo;
 
 import br.com.alvara.model.repository.projection.ArquivoProjection;
-import br.com.alvara.model.repository.projection.impl.ArquivoProjectionImpl;
 import com.sun.istack.Nullable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;

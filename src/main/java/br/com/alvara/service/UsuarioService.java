@@ -18,7 +18,7 @@ public interface UsuarioService {
 
     Page<Usuario> listarTodos(int page, int size);
 
-    public byte[] adicionarFoto(Integer idUser, Part arquivo);
+    byte[] adicionarFoto(Integer idUser, Part arquivo);
 
     void ativarDesativarUsuario(Integer id);
 

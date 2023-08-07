@@ -18,7 +18,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     private Contact contact() {
-        // Dados de contato do desenvolvedor
         return new Contact("Thiago Junior",
                 "https://www.linkedin.com/in/thiago-junior-amorim-de-melo-84246a149/",
                 "thi4go19@gmail.com");

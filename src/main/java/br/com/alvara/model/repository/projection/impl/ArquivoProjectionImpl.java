@@ -3,71 +3,73 @@ package br.com.alvara.model.repository.projection.impl;
 
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.tipo.TipoDocumento;
-import lombok.Data;
 import lombok.Setter;
-
 import java.time.LocalDate;
 
+
+
 @Setter
-public class ArquivoProjectionImpl  implements ArquivoProjection {
-    private Integer id;
-    private TipoDocumento tipo_doc;
-    private String nome_arquivo;
-    private String numero_alvara;
-    private String nome_empresa;
-    private String cnpj_empresa;
-    private LocalDate data_emissao;
-    private LocalDate data_vencimento;
+public class ArquivoProjectionImpl implements ArquivoProjection {
+
+    private Long id;
+    private TipoDocumento tipoDoc;
+    private String nomeArquivo;
+    private String numeroAlvara;
+    private String nomeEmpresa;
+    private String cnpjEmpresa;
+    private LocalDate dataEmissao;
+    private LocalDate dataVencimento;
     private Integer expira;
     private String observacao;
 
     @Override
     public Long getId() {
-        return null;
+        return id;
     }
 
     @Override
-    public TipoDocumento getTipo_doc() {
-        return this.tipo_doc;
+    public TipoDocumento getTipoDoc() {
+        return tipoDoc;
     }
 
     @Override
-    public String getNome_arquivo() {
-        return null;
+    public String getNomeArquivo() {
+        return nomeArquivo;
     }
 
     @Override
-    public String getNumero_alvara() {
-        return null;
+    public String getNumeroAlvara() {
+        return numeroAlvara;
     }
 
     @Override
-    public String getNome_empresa() {
-        return null;
+    public String getNomeEmpresa() {
+        return nomeEmpresa;
     }
 
     @Override
-    public String getCnpj_empresa() {
-        return null;
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
     }
 
     @Override
-    public LocalDate getData_emissao() {
-        return null;
+    public LocalDate getDataEmissao() {
+        return dataEmissao;
     }
 
     @Override
-    public LocalDate getData_vencimento() {
-        return null;
+    public LocalDate getDataVencimento() {
+        return dataVencimento;
     }
 
     @Override
     public Integer getExpira() {
-        return null;
+        return expira;
     }
 
     @Override
     public String getObservacao() {
-        return null;
+        return observacao;
     }
+
 }
