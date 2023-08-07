@@ -128,32 +128,4 @@ class UsuarioServiceImplTest {
 
     }
 
-    @Test
-    void buscarPorUsuername() {
-    }
-
-    @Test
-    void buscarPorCpf() {
-    }
-
-    @Test
-    void listarTodos() {
-    }
-
-    @Test
-    void adicionarFoto() {
-    }
-
-    @Test
-    void ativarDesativarUsuario() {
-    }
-
-    @Test
-    void ativarDesativarUsuarioAdm() {
-    }
-
-    @Test
-    void deletarUsuario() {
-    }
-
 }
