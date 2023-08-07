@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Locale;
 
@@ -17,32 +19,38 @@ public class Pdf {
 
     private static final Logger LOG = LoggerFactory.getLogger(Pdf.class);
 
+    private static final String NAO_ENCONTRADO = "Não Localizado!";
 
-    final static String NAO_ENCONTRADO = "Não Localizado!";
+    private static final String CNPJ_NULO = "00000000000000";
 
     public Arquivo lerPdf(File pdf, byte[] bytes) {
 
         Arquivo arquivo = new Arquivo();
         try (PDDocument document = PDDocument.load(pdf)) {
             if (!document.isEncrypted()) {
+
                 PDFTextStripperByArea stripper = null;
                 stripper = new PDFTextStripperByArea();
                 stripper.setSortByPosition(true);
                 PDFTextStripper tStripper = new PDFTextStripper();
                 String pdfFileInText = tStripper.getText(document);
                 String lines[] = pdfFileInText.split("\\r?\\n");
-                String txt = "";
+
+                StringBuilder txtBuilder = new StringBuilder();
                 for (String line : lines) {
-                    txt = txt + line.toUpperCase(Locale.ROOT);
+                    txtBuilder.append(line.toUpperCase(Locale.ROOT));
                 }
+
+                String txtStr = txtBuilder.toString();
+
                 arquivo.setPdf(bytes);
                 arquivo.setNomeArquivo(pdf.getName());
-                arquivo.setTipoDoc(retornarTipoDocumento(txt));
-                arquivo.setNumeroAlvara(retornarNumeroDocumento(txt));
-                arquivo.setNomeEmpresa(retornarNomeEmpresa(txt));
-                arquivo.setCnpjEmpresa(retornarCnpj(txt, arquivo.getTipoDoc()));
-                arquivo.setDataEmissao(retornarDtEmissao(txt, arquivo.getTipoDoc()));
-                arquivo.setDataVencimento(retornarDtVencimento(txt, arquivo.getTipoDoc(),
+                arquivo.setTipoDoc(retornarTipoDocumento(txtStr));
+                arquivo.setNumeroAlvara(retornarNumeroDocumento(txtStr));
+                arquivo.setNomeEmpresa(retornarNomeEmpresa(txtStr));
+                arquivo.setCnpjEmpresa(retornarCnpj(txtStr, arquivo.getTipoDoc()));
+                arquivo.setDataEmissao(retornarDtEmissao(txtStr, arquivo.getTipoDoc()));
+                arquivo.setDataVencimento(retornarDtVencimento(txtStr, arquivo.getTipoDoc(),
                         arquivo.getDataEmissao()));
 
                 return arquivo;
@@ -56,11 +64,12 @@ public class Pdf {
     public File byteTofile(byte[] bytesArquivo, String nome) {
         File pdfExistente = new File(nome);
         if (pdfExistente.exists()) {
-            if (pdfExistente.delete()) {
-                System.out.println("");
+            Path pdfPath = pdfExistente.toPath();
+            try {
+                Files.delete(pdfPath);
                 LOG.info("Arquivo excluído com sucesso.");
-            } else {
-                LOG.info("Falha ao excluir o arquivo.");
+            } catch (IOException e) {
+                LOG.info("Falha ao excluir o arquivo. " + e.getMessage());
             }
         }
         File file;
@@ -195,6 +204,7 @@ public class Pdf {
 
 
     public String retornarCnpj(String txt, TipoDocumento ticpoDoc) {
+
         try {
             if (ticpoDoc == TipoDocumento.ALVARA_FUNCIONAMENTO) {
                 String tagIni = "CNPJ: ";
@@ -239,9 +249,9 @@ public class Pdf {
                 }
             }
         } catch (Exception e) {
-            return "00000000000000";
+            return CNPJ_NULO;
         }
-        return "00000000000000";
+        return CNPJ_NULO;
     }
 
     public LocalDate retornarDtEmissao(String txt, TipoDocumento ticpoDoc) {
@@ -257,9 +267,9 @@ public class Pdf {
                         .replace(" ", "")
                         .replace("DE", "/")
                         .trim();
-                String obj[] = dataStr.split("[,]", -1);
+                String[] obj = dataStr.split("[,]", -1);
 
-                String objData[] = obj[1].split("[/]", -1);
+                String[] objData = obj[1].split("[/]", -1);
                 int dia = Integer.parseInt(objData[0]);
                 int mes = Integer.parseInt(retornarMes(objData[1]));
                 int ano = Integer.parseInt(objData[2]);
@@ -276,8 +286,8 @@ public class Pdf {
                             .replace(" ", "")
                             .replace("DE", "/")
                             .trim();
-                    String obj[] = dataStr.split("[,]", -1);
-                    String objData[] = obj[1].split("[/]", -1);
+                    String[] obj = dataStr.split("[,]", -1);
+                    String[] objData = obj[1].split("[/]", -1);
                     int dia = Integer.parseInt(objData[0]);
                     int mes = Integer.parseInt(retornarMes(objData[1]));
                     int ano = Integer.parseInt(objData[2]);
@@ -294,9 +304,9 @@ public class Pdf {
                                 .replace(" ", "")
                                 .replace("DE", "/")
                                 .trim();
-                        String obj[] = dataStr.split("[,]", -1);
+                        String[] obj = dataStr.split("[,]", -1);
 
-                        String objData[] = obj[1].split("[/]", -1);
+                        String[] objData = obj[1].split("[/]", -1);
                         int dia = Integer.parseInt(objData[0]);
                         int mes = Integer.parseInt(retornarMes(objData[1]));
                         int ano = Integer.parseInt(objData[2]);
@@ -314,7 +324,7 @@ public class Pdf {
                                     .replace("DE", "/")
                                     .trim();
 
-                            String objData[] = dataStr.split("[/]", -1);
+                            String[] objData = dataStr.split("[/]", -1);
                             int dia = Integer.parseInt(objData[0]);
                             int mes = Integer.parseInt(retornarMes(objData[1]));
                             int ano = Integer.parseInt(objData[2]);
@@ -333,7 +343,6 @@ public class Pdf {
 
     public LocalDate retornarDtVencimento(String txt, TipoDocumento ticpoDoc,
                                           LocalDate dataEmissao) {
-
         try {
             if (ticpoDoc == TipoDocumento.ALVARA_BOMBEIRO) {
                 if (dataEmissao != null) {
@@ -342,17 +351,16 @@ public class Pdf {
             } else {
                 if (ticpoDoc == TipoDocumento.ALVARA_FUNCIONAMENTO) {
                     String tagIni = "VENCIMENTO:";
-                    String tagFim = "OBSERVAÇÃO CCP:";
                     int ini = txt.indexOf(tagIni);
-                    int fim = txt.indexOf(tagFim);
+                    int fim = txt.indexOf("OBSERVAÇÃO CCP:");
                     String dataStr = txt.substring(ini, fim)
                             .replace(tagIni, "")
                             .replace(" ", "")
                             .replace("DE", "/")
                             .trim();
-                    String obj[] = dataStr.split("[,]", -1);
+                    String[] obj = dataStr.split("[,]", -1);
 
-                    String objData[] = obj[1].split("[/]", -1);
+                    String[] objData = obj[1].split("[/]", -1);
                     int dia = Integer.parseInt(objData[0]);
                     int mes = Integer.parseInt(retornarMes(objData[1]));
                     int ano = Integer.parseInt(objData[2]);
