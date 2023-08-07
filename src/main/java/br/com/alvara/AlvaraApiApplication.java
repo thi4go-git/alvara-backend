@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AlvaraApiApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
-        if (args == null) {
-            System.err.println("ERROR: Args null ao Startar!!");
-            System.exit(1);
-        }
         SpringApplication.run(AlvaraApiApplication.class, args);
     }
 }

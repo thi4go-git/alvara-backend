@@ -4,11 +4,12 @@ import br.com.alvara.model.entity.Arquivo;
 import br.com.alvara.model.entity.Pdf;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.repository.ArquivoRepository;
-import br.com.alvara.model.repository.projection.impl.ArquivoProjectionImpl;
 import br.com.alvara.model.tipo.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
 import br.com.alvara.service.ArquivoService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,9 @@ import java.util.List;
 public class ArquivoServiceImpl implements ArquivoService {
 
     Pdf pdfClass = new Pdf();
+
+    private static final Logger LOG = LoggerFactory.getLogger(ArquivoServiceImpl.class);
+
 
     @Autowired
     private ArquivoRepository arquivoRepository;
@@ -78,8 +82,12 @@ public class ArquivoServiceImpl implements ArquivoService {
             File arqPdf = pdfClass.byteTofile(bytes, arquivoPart.getSubmittedFileName());
             Arquivo arquivoObtido = pdfClass.lerPdf(arqPdf, bytes);
 
-            arqPdf.delete();
-            arqPdf.deleteOnExit();
+            if (arqPdf.delete()) {
+                LOG.info("PDF Deletado!");
+            } else {
+                arqPdf.deleteOnExit();
+            }
+
             is.close();
 
             return arquivoObtido;
@@ -88,7 +96,7 @@ public class ArquivoServiceImpl implements ArquivoService {
             try {
                 is.close();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                LOG.error("Erro método partToArquivo " + ex.getCause());
             }
         }
         return null;
@@ -98,9 +106,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     public byte[] baixarArquivo(int id) {
         arquivoRepository.
                 findById(id)
-                .map(arquivo -> {
-                    return arquivo.getPdf();
-                })
+                .map(arquivo -> arquivo.getPdf())
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado para deletar!"));
         return new byte[0];
