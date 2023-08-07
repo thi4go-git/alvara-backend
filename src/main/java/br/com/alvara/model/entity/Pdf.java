@@ -18,10 +18,10 @@ import java.util.Locale;
 public class Pdf {
 
     private static final Logger LOG = LoggerFactory.getLogger(Pdf.class);
-
     private static final String NAO_ENCONTRADO = "Não Localizado!";
-
     private static final String CNPJ_NULO = "00000000000000";
+    private static final String INDEX_CNPJ = "CNPJ:";
+
 
     public Arquivo lerPdf(File pdf, byte[] bytes) {
 
@@ -29,12 +29,12 @@ public class Pdf {
         try (PDDocument document = PDDocument.load(pdf)) {
             if (!document.isEncrypted()) {
 
-                PDFTextStripperByArea stripper = null;
+                PDFTextStripperByArea stripper;
                 stripper = new PDFTextStripperByArea();
                 stripper.setSortByPosition(true);
                 PDFTextStripper tStripper = new PDFTextStripper();
                 String pdfFileInText = tStripper.getText(document);
-                String lines[] = pdfFileInText.split("\\r?\\n");
+                String[] lines = pdfFileInText.split("\\r?\\n");
 
                 StringBuilder txtBuilder = new StringBuilder();
                 for (String line : lines) {
@@ -69,7 +69,7 @@ public class Pdf {
                 Files.delete(pdfPath);
                 LOG.info("Arquivo excluído com sucesso.");
             } catch (IOException e) {
-                LOG.info("Falha ao excluir o arquivo. " + e.getMessage());
+                LOG.error("Falha ao excluir o arquivo. " + e.getMessage());
             }
         }
         File file;
@@ -81,7 +81,7 @@ public class Pdf {
             }
             return file;
         } catch (IOException e) {
-            System.out.println(e);
+            LOG.error(e.getMessage());
         }
         return null;
     }
@@ -132,9 +132,8 @@ public class Pdf {
                     } else {
                         if (txt.contains("CERTIFICADAPROTOCOLO:")) {
                             String tagIni = "CERTIFICADAPROTOCOLO:";
-                            String tagFim = "CNPJ:";
                             int ini = txt.indexOf(tagIni);
-                            int fim = txt.indexOf(tagFim);
+                            int fim = txt.indexOf(INDEX_CNPJ);
                             String numero = txt.substring(ini, fim).replace(tagIni, "").trim();
                             return refatoraNumero(numero);
                         }
@@ -151,16 +150,14 @@ public class Pdf {
         try {
             if (txt.contains("NOME DA EMPRESA: ")) {
                 String tagIni = "NOME DA EMPRESA: ";
-                String tagFim = "CNPJ: ";
                 int ini = txt.indexOf(tagIni);
-                int fim = txt.indexOf(tagFim);
+                int fim = txt.indexOf(INDEX_CNPJ);
                 return txt.substring(ini, fim).replace(tagIni, "").trim();
             } else {
                 if (txt.contains("RAZÃO SOCIAL: ")) {
                     String tagIni = "RAZÃO SOCIAL: ";
-                    String tagFim = "CNPJ:";
                     int ini = txt.indexOf(tagIni);
-                    int fim = txt.indexOf(tagFim);
+                    int fim = txt.indexOf(INDEX_CNPJ);
                     return txt.substring(ini, fim).replace(tagIni, "");
                 } else {
                     if (txt.contains("CONCEDE A LICENÇA AMBIENTAL DECLARATÓRIA A ")) {
@@ -189,17 +186,19 @@ public class Pdf {
     }
 
     public String refatoraNumero(String numero) {
-        String novoNumero = "";
+
+        StringBuilder novoNumero = new StringBuilder();
         numero = numero.trim();
+
         String regex = "[0-9]+";
         for (int f = 0; f < numero.length(); f++) {
             if (numero.substring(f, (f + 1)).matches(regex)) {
-                novoNumero = novoNumero + numero.substring(f, (f + 1));
+                novoNumero.append(numero.substring(f, (f + 1)));
             } else {
                 break;
             }
         }
-        return novoNumero;
+        return novoNumero.toString();
     }
 
 
@@ -207,22 +206,20 @@ public class Pdf {
 
         try {
             if (ticpoDoc == TipoDocumento.ALVARA_FUNCIONAMENTO) {
-                String tagIni = "CNPJ: ";
                 String tagFim = "ATIVIDADE(S)";
-                int ini = txt.indexOf(tagIni);
+                int ini = txt.indexOf(INDEX_CNPJ);
                 int fim = txt.indexOf(tagFim);
-                return txt.substring(ini, fim).replace(tagIni, "")
+                return txt.substring(ini, fim).replace(INDEX_CNPJ, "")
                         .replace(".", "")
                         .replace("/", "")
                         .replace("-", "")
                         .trim();
             } else {
                 if (ticpoDoc == TipoDocumento.LICENCA_SANITARIA) {
-                    String tagIni = "CNPJ:  ";
                     String tagFim = "ENDEREÇO:";
-                    int ini = txt.indexOf(tagIni);
+                    int ini = txt.indexOf(INDEX_CNPJ);
                     int fim = txt.indexOf(tagFim);
-                    return txt.substring(ini, fim).replace(tagIni, "")
+                    return txt.substring(ini, fim).replace(INDEX_CNPJ, "")
                             .replace(".", "")
                             .replace("/", "")
                             .replace("-", "").trim();
@@ -238,9 +235,8 @@ public class Pdf {
                                 .replace("-", "").trim();
                     } else {
                         if (ticpoDoc == TipoDocumento.ALVARA_BOMBEIRO) {
-                            String tagIni = "CNPJ:";
-                            int ini = txt.indexOf(tagIni) + 5;
-                            return txt.substring(ini, ini + 19).replace(tagIni, "")
+                            int ini = txt.indexOf(INDEX_CNPJ) + 5;
+                            return txt.substring(ini, ini + 19).replace(INDEX_CNPJ, "")
                                     .replace(".", "")
                                     .replace("/", "")
                                     .replace("-", "").trim();

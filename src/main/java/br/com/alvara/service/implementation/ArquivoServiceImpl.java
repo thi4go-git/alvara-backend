@@ -21,6 +21,8 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +31,9 @@ import java.util.List;
 public class ArquivoServiceImpl implements ArquivoService {
 
     Pdf pdfClass = new Pdf();
-
     private static final Logger LOG = LoggerFactory.getLogger(ArquivoServiceImpl.class);
+
+    private static final String EXPIRA_STR = "EXPIRA";
 
 
     @Autowired
@@ -82,10 +85,14 @@ public class ArquivoServiceImpl implements ArquivoService {
             File arqPdf = pdfClass.byteTofile(bytes, arquivoPart.getSubmittedFileName());
             Arquivo arquivoObtido = pdfClass.lerPdf(arqPdf, bytes);
 
-            if (arqPdf.delete()) {
-                LOG.info("PDF Deletado!");
-            } else {
-                arqPdf.deleteOnExit();
+            if (arqPdf.exists()) {
+                Path pdfPath = arqPdf.toPath();
+                try {
+                    Files.delete(pdfPath);
+                    LOG.info("Arquivo excluído com sucesso.");
+                } catch (IOException e) {
+                    LOG.error("Falha ao excluir o arquivo. " + e.getMessage());
+                }
             }
 
             is.close();
@@ -104,12 +111,10 @@ public class ArquivoServiceImpl implements ArquivoService {
 
     @Override
     public byte[] baixarArquivo(int id) {
-        arquivoRepository.
-                findById(id)
-                .map(arquivo -> arquivo.getPdf())
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado para deletar!"));
-        return new byte[0];
+        return arquivoRepository
+                .findById(id)
+                .map(Arquivo::getPdf)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado para deletar!"));
     }
 
 
@@ -119,19 +124,16 @@ public class ArquivoServiceImpl implements ArquivoService {
                 page,
                 size,
                 Sort.Direction.ASC,
-                "EXPIRA");
+                EXPIRA_STR);
         return arquivoRepository.listarTodos(pageRequest);
     }
 
     @Override
     public Page<ArquivoProjection> listarTodosMatcher(int page, int size, ArquivoDTO dto) {
-
         Pageable pageable = PageRequest.of(page, size);
-        Page<ArquivoProjection> resultadoPaginado = arquivoRepository
+        return arquivoRepository
                 .buscarArquivosPaginados(dto.getCnpjEmpresa().trim(), dto.getNomeEmpresa().trim(),
                         dto.getNumeroAlvara().trim(), dto.getNomeArquivo().trim(), pageable);
-
-        return resultadoPaginado;
     }
 
     @Override
@@ -140,14 +142,14 @@ public class ArquivoServiceImpl implements ArquivoService {
                 page,
                 size,
                 Sort.Direction.ASC,
-                "EXPIRA");
+                EXPIRA_STR);
         List<ArquivoProjection> lista = new ArrayList<>();
         for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
             if (arquivo.getDataVencimento() != null && arquivo.getExpira() <= 0) {
                 lista.add(arquivo);
             }
         }
-        return new PageImpl<ArquivoProjection>(lista, pageRequest, size);
+        return new PageImpl<>(lista, pageRequest, size);
 
     }
 
@@ -157,7 +159,7 @@ public class ArquivoServiceImpl implements ArquivoService {
                 page,
                 size,
                 Sort.Direction.ASC,
-                "EXPIRA");
+                EXPIRA_STR);
         List<ArquivoProjection> lista = new ArrayList<>();
         for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
             if (arquivo.getExpira() > 0 &&
@@ -165,7 +167,7 @@ public class ArquivoServiceImpl implements ArquivoService {
                 lista.add(arquivo);
             }
         }
-        return new PageImpl<ArquivoProjection>(lista, pageRequest, size);
+        return new PageImpl<>(lista, pageRequest, size);
     }
 
     @Override
@@ -174,14 +176,14 @@ public class ArquivoServiceImpl implements ArquivoService {
                 page,
                 size,
                 Sort.Direction.ASC,
-                "EXPIRA");
+                EXPIRA_STR);
         List<ArquivoProjection> lista = new ArrayList<>();
         for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
             if (arquivo.getDataVencimento() == null) {
                 lista.add(arquivo);
             }
         }
-        return new PageImpl<ArquivoProjection>(lista, pageRequest, size);
+        return new PageImpl<>(lista, pageRequest, size);
     }
 
     @Override
@@ -190,14 +192,14 @@ public class ArquivoServiceImpl implements ArquivoService {
                 page,
                 size,
                 Sort.Direction.ASC,
-                "EXPIRA");
+                EXPIRA_STR);
         List<ArquivoProjection> lista = new ArrayList<>();
         for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
             if (arquivo.getExpira() > 60) {
                 lista.add(arquivo);
             }
         }
-        return new PageImpl<ArquivoProjection>(lista, pageRequest, size);
+        return new PageImpl<>(lista, pageRequest, size);
     }
 
     @Override
