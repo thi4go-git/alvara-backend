@@ -44,14 +44,14 @@ public class Pdf {
                 String txtStr = txtBuilder.toString();
 
                 arquivo.setPdf(bytes);
-                arquivo.setNomeArquivo(pdf.getName());
-                arquivo.setTipoDoc(retornarTipoDocumento(txtStr));
-                arquivo.setNumeroAlvara(retornarNumeroDocumento(txtStr));
-                arquivo.setNomeEmpresa(retornarNomeEmpresa(txtStr));
-                arquivo.setCnpjEmpresa(retornarCnpj(txtStr, arquivo.getTipoDoc()));
-                arquivo.setDataEmissao(retornarDtEmissao(txtStr, arquivo.getTipoDoc()));
-                arquivo.setDataVencimento(retornarDtVencimento(txtStr, arquivo.getTipoDoc(),
-                        arquivo.getDataEmissao()));
+                arquivo.setNome_arquivo(pdf.getName());
+                arquivo.setTipo_doc(retornarTipoDocumento(txtStr));
+                arquivo.setNumero_alvara(retornarNumeroDocumento(txtStr));
+                arquivo.setNome_empresa(retornarNomeEmpresa(txtStr));
+                arquivo.setCnpj_empresa(retornarCnpj(txtStr, arquivo.getTipo_doc()));
+                arquivo.setData_emissao(retornarDtEmissao(txtStr, arquivo.getTipo_doc()));
+                arquivo.setData_vencimento(retornarDtVencimento(txtStr, arquivo.getTipo_doc(),
+                        arquivo.getData_emissao()));
 
                 return arquivo;
             }

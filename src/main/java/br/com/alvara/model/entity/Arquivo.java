@@ -18,30 +18,31 @@ public class Arquivo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Integer id;
 
-    @Column(name = "tipo_doc")
-    private TipoDocumento tipoDoc;
+    @Column
+    private TipoDocumento tipo_doc;
 
-    @Column(name = "nome_arquivo", length = 150)
-    private String nomeArquivo;
+    @Column(length = 150)
+    private String nome_arquivo;
 
-    @Column(name = "numero_alvara", length = 50)
-    private String numeroAlvara;
+    @Column(length = 50)
+    private String numero_alvara;
 
-    @Column(name = "nome_empresa", length = 50)
-    private String nomeEmpresa;
+    @Column( length = 50)
+    private String nome_empresa;
 
-    @Column(name = "cnpj_empresa", length = 14)
-    private String cnpjEmpresa;
+    @Column( length = 14)
+    private String cnpj_empresa;
 
-    @Column(name = "data_emissao")
+    @Column
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dataEmissao;
+    private LocalDate data_emissao;
 
-    @Column(name = "data_vencimento")
+    @Column
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dataVencimento;
+    private LocalDate data_vencimento;
 
     @Column
     private Integer expira;

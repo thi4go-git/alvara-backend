@@ -12,15 +12,16 @@ import java.time.LocalDate;
 public class ArquivoProjectionImpl implements ArquivoProjection {
 
     private Long id;
-    private TipoDocumento tipoDoc;
-    private String nomeArquivo;
-    private String numeroAlvara;
-    private String nomeEmpresa;
-    private String cnpjEmpresa;
-    private LocalDate dataEmissao;
-    private LocalDate dataVencimento;
+    private TipoDocumento tipo_doc;
+    private String nome_arquivo;
+    private String numero_alvara;
+    private String nome_empresa;
+    private String cnpj_empresa;
+    private LocalDate data_emissao;
+    private LocalDate data_vencimento;
     private Integer expira;
     private String observacao;
+
 
     @Override
     public Long getId() {
@@ -28,38 +29,38 @@ public class ArquivoProjectionImpl implements ArquivoProjection {
     }
 
     @Override
-    public TipoDocumento getTipoDoc() {
-        return tipoDoc;
+    public TipoDocumento getTipo_doc() {
+        return tipo_doc;
     }
 
     @Override
-    public String getNomeArquivo() {
-        return nomeArquivo;
+    public String getNome_arquivo() {
+        return nome_arquivo;
     }
 
     @Override
-    public String getNumeroAlvara() {
-        return numeroAlvara;
+    public String getNumero_alvara() {
+        return numero_alvara;
     }
 
     @Override
-    public String getNomeEmpresa() {
-        return nomeEmpresa;
+    public String getNome_empresa() {
+        return nome_empresa;
     }
 
     @Override
-    public String getCnpjEmpresa() {
-        return cnpjEmpresa;
+    public String getCnpj_empresa() {
+        return cnpj_empresa;
     }
 
     @Override
-    public LocalDate getDataEmissao() {
-        return dataEmissao;
+    public LocalDate getData_emissao() {
+        return data_emissao;
     }
 
     @Override
-    public LocalDate getDataVencimento() {
-        return dataVencimento;
+    public LocalDate getData_vencimento() {
+        return data_vencimento;
     }
 
     @Override
@@ -71,5 +72,4 @@ public class ArquivoProjectionImpl implements ArquivoProjection {
     public String getObservacao() {
         return observacao;
     }
-
 }
