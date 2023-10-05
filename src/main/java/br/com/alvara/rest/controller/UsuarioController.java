@@ -27,7 +27,7 @@ public class UsuarioController {
     }
 
     @GetMapping()
-    public Page<Usuario> listarTodos(
+    public Page<Usuario> listarTodos (
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size
     ) {
