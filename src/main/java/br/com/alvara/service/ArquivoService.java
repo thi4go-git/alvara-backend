@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ArquivoService {
 
-    void salvarArquivo(Part pdf);
+    Arquivo salvarArquivo(Part pdf);
 
     void atualizarPdf(Part pdfNovo, Integer id);
 

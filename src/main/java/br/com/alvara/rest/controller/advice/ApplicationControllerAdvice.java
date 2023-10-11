@@ -1,4 +1,4 @@
-package br.com.alvara.rest.controller;
+package br.com.alvara.rest.controller.advice;
 
 import br.com.alvara.exception.ApiErrors;
 import org.springframework.http.HttpStatus;

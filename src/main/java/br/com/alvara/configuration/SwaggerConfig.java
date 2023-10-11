@@ -19,7 +19,7 @@ public class SwaggerConfig {
 
     private Contact contact() {
         return new Contact("Thiago Junior",
-                "https://www.linkedin.com/in/thiago-junior-amorim-de-melo-84246a149/",
+                "https://www.linkedin.com/in/thiago-amorim-melo/",
                 "thi4go19@gmail.com");
     }
 
@@ -27,7 +27,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("API Alvará WEB")
                 .description("API de Alvarás")
-                .version("15/08/2023")
+                .version("11/10/2023")
                 .contact(contact())
                 .build();
     }

@@ -1,5 +1,6 @@
-package br.com.alvara.model.entity;
+package br.com.alvara.util;
 
+import br.com.alvara.model.entity.Arquivo;
 import br.com.alvara.model.tipo.TipoDocumento;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;

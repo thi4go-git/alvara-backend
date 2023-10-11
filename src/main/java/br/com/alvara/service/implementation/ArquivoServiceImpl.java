@@ -1,7 +1,8 @@
 package br.com.alvara.service.implementation;
 
+import br.com.alvara.exception.GeralException;
 import br.com.alvara.model.entity.Arquivo;
-import br.com.alvara.model.entity.Pdf;
+import br.com.alvara.util.Pdf;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.repository.ArquivoRepository;
 import br.com.alvara.model.tipo.TipoDocumento;
@@ -41,10 +42,12 @@ public class ArquivoServiceImpl implements ArquivoService {
 
     @Override
     @Transactional
-    public void salvarArquivo(Part arquivoNovo) {
+    public Arquivo salvarArquivo(Part arquivoNovo) {
         Arquivo novo = partToArquivo(arquivoNovo);
         if (novo != null) {
-            arquivoRepository.save(novo);
+            return arquivoRepository.save(novo);
+        } else {
+            throw new GeralException("Erro ao salvar Arquivo");
         }
     }
 
@@ -77,7 +80,6 @@ public class ArquivoServiceImpl implements ArquivoService {
     public Arquivo partToArquivo(Part arquivoPart) {
         InputStream is = null;
         try {
-
             is = arquivoPart.getInputStream();
             byte[] bytes = new byte[(int) arquivoPart.getSize()];
             IOUtils.readFully(is, bytes);
