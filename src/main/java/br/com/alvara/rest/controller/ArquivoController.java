@@ -142,6 +142,12 @@ public class ArquivoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/deletar-multiplos")
+    public ResponseEntity<Void> deletarPorId(@RequestBody List<String> listaDeletar) {
+        arquivoService.deletarPorLista(listaDeletar);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/tipodocumento")
     public ResponseEntity<List<TipoDocumento>> tipoDocumentoList() {
         List<TipoDocumento> tiposDocs = arquivoService.listaTipoDoc();

@@ -269,6 +269,21 @@ public class ArquivoServiceImpl implements ArquivoService {
     }
 
     @Override
+    public void deletarPorLista(List<String> listaDeletar) {
+        if (!listaDeletar.isEmpty()) {
+            for (String id : listaDeletar) {
+                Integer idDeletar = Integer.parseInt(id.trim());
+                arquivoRepository.
+                        findById(idDeletar)
+                        .map(documento -> {
+                            arquivoRepository.delete(documento);
+                            return Void.TYPE;
+                        });
+            }
+        }
+    }
+
+    @Override
     public int qtdeArquivos() {
         return arquivoRepository.totalDocumentos();
     }

@@ -37,6 +37,8 @@ public interface ArquivoService {
 
     void deletarPorId(Integer id);
 
+    void deletarPorLista(List<String> listaDeletar);
+
     int qtdeArquivos();
 
     int totalArquivosVencerApos60Dias();
