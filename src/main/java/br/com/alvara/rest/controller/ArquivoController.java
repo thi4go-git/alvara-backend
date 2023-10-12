@@ -4,12 +4,15 @@ import br.com.alvara.model.entity.Arquivo;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.tipo.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
+import br.com.alvara.rest.dto.ArquivoFilterDTO;
 import br.com.alvara.rest.dto.ArquivoResponseDTO;
 import br.com.alvara.rest.mapper.ArquivoMapper;
 import br.com.alvara.service.implementation.ArquivoServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,7 +30,7 @@ public class ArquivoController {
 
 
     private static final String CAMPO_ID_OBRIGATORIO = "O campo id é obrigatório!";
-
+    private static final String SERVER_ERROR = "Erro interno do servidor!";
 
     @Autowired
     private ArquivoServiceImpl arquivoService;
@@ -64,22 +67,18 @@ public class ArquivoController {
         return ResponseEntity.ok().body(bytesArquivo);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<ArquivoProjection>> listarTodos(
-            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size
-    ) {
-        Page<ArquivoProjection> pageArquivoProjection = arquivoService.listarTodos(page, size);
-        return ResponseEntity.ok().body(pageArquivoProjection);
-    }
-
     @PostMapping("/listar-matcher")
-    public ResponseEntity<Page<ArquivoProjection>> listarTodosMatcher(
+    @Operation(summary = "Listar com Filtros", description = "Este endpoint Lista Paginandodo + Filtros")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Filtros aplicados"),
+            @ApiResponse(responseCode = "500", description = SERVER_ERROR)
+    })
+    public ResponseEntity<Page<ArquivoProjection>> listarTodosFilterMatcher(
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-            @RequestBody ArquivoDTO dto
+            @RequestBody ArquivoFilterDTO dto
     ) {
-        Page<ArquivoProjection> pageArquivoProjection = arquivoService.listarTodosMatcher(page, size, dto);
+        Page<ArquivoProjection> pageArquivoProjection = arquivoService.listarTodosFilterMatcher(page, size, dto);
         return ResponseEntity.ok().body(pageArquivoProjection);
     }
 

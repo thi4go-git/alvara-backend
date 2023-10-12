@@ -2,31 +2,18 @@ package br.com.alvara.model.repository;
 
 import br.com.alvara.model.entity.Arquivo;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
-
 import java.util.List;
-import java.util.Optional;
 
 
 @Repository
 public interface ArquivoRepository extends JpaRepository<Arquivo, Integer> {
-
-    @Query(value = "SELECT * FROM ARQUIVO  WHERE PDF =:pdf LIMIT 1", nativeQuery = true)
-    Optional<Arquivo> findByPdf(byte[] pdf);
-
-    @Query(value = "SELECT  " +
-            "id,tipo_doc,nome_arquivo,numero_alvara,nome_empresa, cnpj_empresa,data_emissao,data_vencimento, " +
-            "(CASE WHEN data_vencimento is null THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) as expira, observacao " +
-            "FROM ARQUIVO ", nativeQuery = true)
-    Page<ArquivoProjection> listarTodos(Pageable pageable);
 
     @Query(value = "SELECT  " +
             "id,tipo_doc,nome_arquivo,numero_alvara,nome_empresa, cnpj_empresa,data_emissao,data_vencimento, " +
@@ -34,35 +21,53 @@ public interface ArquivoRepository extends JpaRepository<Arquivo, Integer> {
             "FROM ARQUIVO ", nativeQuery = true)
     List<ArquivoProjection> listarTodosList();
 
-    @Query(value = "SELECT " +
-            "id, tipo_doc, nome_arquivo, numero_alvara, nome_empresa, cnpj_empresa, data_emissao, data_vencimento, " +
-            "(CASE WHEN data_vencimento is null THEN 0 ELSE (data_vencimento - CURRENT_DATE) END) as expira, observacao " +
-            "FROM ARQUIVO ",
-            countQuery = "SELECT COUNT(*) FROM ARQUIVO ",
-            nativeQuery = true)
-    Page<ArquivoProjection> listarTodosMatcher(@Nullable Example<ArquivoProjection> example, Pageable pageable);
 
-
-    @Query(value = "SELECT id, tipo_doc, nome_arquivo, numero_alvara, nome_empresa, cnpj_empresa, data_emissao, data_vencimento, " +
-            "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) AS expira, observacao " +
-            "FROM ARQUIVO " +
-            "WHERE 1=1 " +
-            "AND (:cnpjEmpresa IS NULL OR cnpj_empresa ILIKE %:cnpjEmpresa% ) " +
-            "AND (:nomeEmpresa IS NULL OR nome_empresa  ILIKE %:nomeEmpresa% ) " +
-            "AND (:numeroAlvara IS NULL OR numero_alvara   ILIKE %:numeroAlvara% ) " +
-            "AND (:nomeArquivo IS NULL OR nome_arquivo   ILIKE %:nomeArquivo% ) ",
+    @Query(value =
+            "SELECT id, tipo_doc, nome_arquivo, numero_alvara, nome_empresa, " +
+                    "cnpj_empresa, data_emissao, data_vencimento, " +
+                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) " +
+                    "AS expira, observacao " +
+                    "FROM ARQUIVO " +
+                    "WHERE 1=1 " +
+                    "AND (:nome IS NULL OR nome_empresa ILIKE %:nome% ) " +
+                    "AND (:numero IS NULL OR numero_alvara ILIKE %:numero% ) " +
+                    "AND (:cnpj IS NULL OR cnpj_empresa ILIKE %:cnpj% ) " +
+                    "AND ( :tipo is null OR tipo_doc = :tipo )",
             countQuery = "SELECT COUNT(*) FROM ARQUIVO " +
                     "WHERE 1=1 " +
-                    "AND (:cnpjEmpresa IS NULL OR cnpj_empresa ILIKE %:cnpjEmpresa% ) " +
-                    "AND (:nomeEmpresa IS NULL OR nome_empresa  ILIKE %:nomeEmpresa% ) " +
-                    "AND (:numeroAlvara IS NULL OR numero_alvara   ILIKE %:numeroAlvara% ) " +
-                    "AND (:nomeArquivo IS NULL OR nome_arquivo   ILIKE %:nomeArquivo% ) ",
+                    "AND (:nome IS NULL OR nome_empresa ILIKE %:nome% ) " +
+                    "AND (:numero IS NULL OR numero_alvara ILIKE %:numero% ) " +
+                    "AND (:cnpj IS NULL OR cnpj_empresa ILIKE %:cnpj% ) " +
+                    "AND ( :tipo is null OR tipo_doc = :tipo )",
             nativeQuery = true)
-    Page<ArquivoProjection> buscarArquivosPaginados(
-            @Param("cnpjEmpresa") String cnpjEmpresa,
-            @Param("nomeEmpresa") String nomeEmpresa,
-            @Param("numeroAlvara") String numeroAlvara,
-            @Param("nomeArquivo") String nomeArquivo,
+    Page<ArquivoProjection> buscarArquivosPaginadosFilterComTipoDoc(
+            @Param("nome") String empresa,
+            @Param("numero") String numero,
+            @Param("cnpj") String cnpj,
+            @Param("tipo") int tipo,
+            Pageable pageable);
+
+
+    @Query(value =
+            "SELECT id, tipo_doc, nome_arquivo, numero_alvara, nome_empresa, " +
+                    "cnpj_empresa, data_emissao, data_vencimento, " +
+                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) " +
+                    "AS expira, observacao " +
+                    "FROM ARQUIVO " +
+                    "WHERE 1=1 " +
+                    "AND (:nome IS NULL OR nome_empresa ILIKE %:nome% ) " +
+                    "AND (:numero IS NULL OR numero_alvara ILIKE %:numero% ) " +
+                    "AND (:cnpj IS NULL OR cnpj_empresa ILIKE %:cnpj% ) ",
+            countQuery = "SELECT COUNT(*) FROM ARQUIVO " +
+                    "WHERE 1=1 " +
+                    "AND (:nome IS NULL OR nome_empresa ILIKE %:nome% ) " +
+                    "AND (:numero IS NULL OR numero_alvara ILIKE %:numero% ) " +
+                    "AND (:cnpj IS NULL OR cnpj_empresa ILIKE %:cnpj% ) ",
+            nativeQuery = true)
+    Page<ArquivoProjection> buscarArquivosPaginadosFilterSemTipoDoc(
+            @Param("nome") String empresa,
+            @Param("numero") String numero,
+            @Param("cnpj") String cnpj,
             Pageable pageable);
 
 

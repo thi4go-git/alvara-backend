@@ -2,6 +2,7 @@ package br.com.alvara.service.implementation;
 
 import br.com.alvara.exception.GeralException;
 import br.com.alvara.model.entity.Arquivo;
+import br.com.alvara.rest.dto.ArquivoFilterDTO;
 import br.com.alvara.util.Pdf;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.repository.ArquivoRepository;
@@ -26,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -119,27 +121,41 @@ public class ArquivoServiceImpl implements ArquivoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado para deletar!"));
     }
 
-
     @Override
-    public Page<ArquivoProjection> listarTodos(int page, int size) {
+    public Page<ArquivoProjection> listarTodosFilterMatcher(int page, int size, ArquivoFilterDTO dto) {
+
+        TipoDocumento tipoDocumento = null;
+
+        if (Objects.nonNull(dto.getTipo_doc())) {
+            if (!dto.getTipo_doc().equals("TODOS") &&
+                    !dto.getTipo_doc().equals("")) {
+                tipoDocumento = TipoDocumento.valueOf(dto.getTipo_doc());
+            }
+        }
+
         PageRequest pageRequest = PageRequest.of(
                 page,
                 size,
                 Sort.Direction.ASC,
                 EXPIRA_STR);
-        return arquivoRepository.listarTodos(pageRequest);
-    }
 
-    @Override
-    public Page<ArquivoProjection> listarTodosMatcher(int page, int size, ArquivoDTO dto) {
-        Pageable pageable = PageRequest.of(page, size);
-        return arquivoRepository
-                .buscarArquivosPaginados(dto.getCnpj_empresa().trim(), dto.getNome_empresa().trim(),
-                        dto.getNumero_alvara().trim(), dto.getNome_arquivo().trim(), pageable);
+        if (tipoDocumento != null) {
+            return arquivoRepository
+                    .buscarArquivosPaginadosFilterComTipoDoc(
+                            dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
+                            dto.getCnpj_empresa().trim(), tipoDocumento.ordinal()
+                            , pageRequest);
+        } else {
+            return arquivoRepository
+                    .buscarArquivosPaginadosFilterSemTipoDoc(
+                            dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
+                            dto.getCnpj_empresa().trim(), pageRequest);
+        }
     }
 
     @Override
     public Page<ArquivoProjection> listarVencidos(int page, int size) {
+
         PageRequest pageRequest = PageRequest.of(
                 page,
                 size,
@@ -152,7 +168,6 @@ public class ArquivoServiceImpl implements ArquivoService {
             }
         }
         return new PageImpl<>(lista, pageRequest, size);
-
     }
 
     @Override

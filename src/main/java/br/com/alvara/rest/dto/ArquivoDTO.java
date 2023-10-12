@@ -16,7 +16,7 @@ public class ArquivoDTO {
 
     private Integer id;
 
-    private TipoDocumento tipo_doc;
+    private TipoDocumento tipo_doc = null;
 
     @NotEmpty(message = "{campo.nome_arquivo.obrigatorio}")
     private String nome_arquivo;

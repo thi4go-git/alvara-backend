@@ -5,6 +5,7 @@ import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.repository.projection.impl.ArquivoProjectionImpl;
 import br.com.alvara.model.tipo.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
+import br.com.alvara.rest.dto.ArquivoFilterDTO;
 import org.springframework.data.domain.Page;
 
 import javax.servlet.http.Part;
@@ -18,9 +19,7 @@ public interface ArquivoService {
 
     byte[] baixarArquivo(int id);
 
-    Page<ArquivoProjection> listarTodos(int page, int size);
-
-    Page<ArquivoProjection> listarTodosMatcher(int page, int size, ArquivoDTO dto);
+    Page<ArquivoProjection> listarTodosFilterMatcher(int page, int size, ArquivoFilterDTO dto);
 
     Page<ArquivoProjection> listarVencidos(int page, int size);
 
