@@ -1,7 +1,8 @@
 package br.com.alvara.model.repository.projection;
 
 
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.StatusDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 
 import java.time.LocalDate;
 
@@ -25,4 +26,6 @@ public interface ArquivoProjection {
     Integer getExpira();
 
     String getObservacao();
+
+    StatusDocumento getStatus_documento();
 }

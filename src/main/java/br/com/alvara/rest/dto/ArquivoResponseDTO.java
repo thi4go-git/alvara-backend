@@ -1,22 +1,18 @@
 package br.com.alvara.rest.dto;
 
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.StatusDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class ArquivoResponseDTO {
-
     private Integer id;
     private TipoDocumento tipo_doc;
     private String nome_arquivo;
@@ -32,6 +28,5 @@ public class ArquivoResponseDTO {
 
     private Integer expira;
     private String observacao;
-
-
+    private StatusDocumento status_documento;
 }

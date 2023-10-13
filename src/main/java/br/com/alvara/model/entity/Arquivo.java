@@ -1,6 +1,7 @@
 package br.com.alvara.model.entity;
 
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.StatusDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,10 +31,10 @@ public class Arquivo {
     @Column(length = 50)
     private String numero_alvara;
 
-    @Column( length = 50)
+    @Column(length = 50)
     private String nome_empresa;
 
-    @Column( length = 14)
+    @Column(length = 14)
     private String cnpj_empresa;
 
     @Column
@@ -52,6 +53,9 @@ public class Arquivo {
 
     @Column
     private String observacao;
+
+    @Column
+    private StatusDocumento status_documento;
 
     public Arquivo(byte[] pdf) {
         this.pdf = pdf;

@@ -1,11 +1,12 @@
 package br.com.alvara.model.repository.projection.impl;
 
 
+import br.com.alvara.model.enums.StatusDocumento;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 import lombok.Setter;
-import java.time.LocalDate;
 
+import java.time.LocalDate;
 
 
 @Setter
@@ -21,6 +22,7 @@ public class ArquivoProjectionImpl implements ArquivoProjection {
     private LocalDate data_vencimento;
     private Integer expira;
     private String observacao;
+    private StatusDocumento status_documento;
 
 
     @Override
@@ -71,5 +73,10 @@ public class ArquivoProjectionImpl implements ArquivoProjection {
     @Override
     public String getObservacao() {
         return observacao;
+    }
+
+    @Override
+    public StatusDocumento getStatus_documento() {
+        return status_documento;
     }
 }

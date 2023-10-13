@@ -1,8 +1,9 @@
 package br.com.alvara.rest.controller;
 
 import br.com.alvara.model.entity.Arquivo;
+import br.com.alvara.model.enums.StatusDocumento;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
 import br.com.alvara.rest.dto.ArquivoFilterDTO;
 import br.com.alvara.rest.dto.ArquivoResponseDTO;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import javax.servlet.http.Part;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -62,8 +64,7 @@ public class ArquivoController {
     public ResponseEntity<byte[]> baixarArquivo(
             @PathVariable("id") @NotBlank(message = CAMPO_ID_OBRIGATORIO) final Integer id
     ) {
-        byte[] bytesArquivo = arquivoService.baixarArquivo(id);
-        return ResponseEntity.ok().body(bytesArquivo);
+        return ResponseEntity.ok().body(arquivoService.baixarArquivo(id));
     }
 
     @PostMapping("/listar-matcher")
@@ -151,6 +152,12 @@ public class ArquivoController {
     public ResponseEntity<List<TipoDocumento>> tipoDocumentoList() {
         List<TipoDocumento> tiposDocs = arquivoService.listaTipoDoc();
         return ResponseEntity.ok().body(tiposDocs);
+    }
+
+    @GetMapping("/status-documento")
+    public ResponseEntity<List<StatusDocumento>> statusDocumentoList() {
+        List<StatusDocumento> statusDocumentoList = arquivoService.listaStatusDocumento();
+        return ResponseEntity.ok().body(statusDocumentoList);
     }
 
     @GetMapping("/totalarquivos")

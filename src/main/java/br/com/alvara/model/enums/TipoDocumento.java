@@ -1,4 +1,4 @@
-package br.com.alvara.model.tipo;
+package br.com.alvara.model.enums;
 
 public enum TipoDocumento {
     ALVARA_FUNCIONAMENTO,

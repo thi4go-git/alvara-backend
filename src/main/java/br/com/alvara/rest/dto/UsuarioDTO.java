@@ -26,8 +26,6 @@ public class UsuarioDTO {
     private String nome;
 
     @NotBlank(message = "{campo.cpf.obrigatorio}")
-    @Size(min = 11, max = 11, message = "O CPF deve conter 11 caracteres.")
-    @Pattern(regexp = "\\d{8}", message = "O CPF deverá conter apenas números.")
     @CPF(message = "{campo.cpf.invalido}")
     @CPFunico
     private String cpf;

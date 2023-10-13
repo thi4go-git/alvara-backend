@@ -29,6 +29,7 @@ public class UsuarioController {
     public ResponseEntity<Usuario> salvar(
             @RequestBody @Valid UsuarioDTO dto
     ) {
+
         Usuario novo = service.salvarDto(dto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

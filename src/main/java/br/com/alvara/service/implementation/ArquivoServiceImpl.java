@@ -2,11 +2,12 @@ package br.com.alvara.service.implementation;
 
 import br.com.alvara.exception.GeralException;
 import br.com.alvara.model.entity.Arquivo;
+import br.com.alvara.model.enums.StatusDocumento;
 import br.com.alvara.rest.dto.ArquivoFilterDTO;
 import br.com.alvara.util.Pdf;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.repository.ArquivoRepository;
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
 import br.com.alvara.service.ArquivoService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -45,7 +46,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     @Transactional
     public Arquivo salvarArquivo(Part arquivoNovo) {
-        Arquivo novo = partToArquivo(arquivoNovo);
+        Arquivo novo = converterPartParaAquivo(arquivoNovo);
         if (novo != null) {
             return arquivoRepository.save(novo);
         } else {
@@ -56,7 +57,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     @Transactional
     public void atualizarPdf(Part pdfUpdate, Integer id) {
-        Arquivo novo = partToArquivo(pdfUpdate);
+        Arquivo novo = converterPartParaAquivo(pdfUpdate);
         if (novo != null) {
             arquivoRepository.
                     findById(id)
@@ -79,7 +80,7 @@ public class ArquivoServiceImpl implements ArquivoService {
         }
     }
 
-    public Arquivo partToArquivo(Part arquivoPart) {
+    public Arquivo converterPartParaAquivo(Part arquivoPart) {
         InputStream is = null;
         try {
             is = arquivoPart.getInputStream();
@@ -133,24 +134,74 @@ public class ArquivoServiceImpl implements ArquivoService {
             }
         }
 
+        StatusDocumento statusDocumento = null;
+
+        if (Objects.nonNull(dto.getStatus_documento())) {
+            if (!dto.getStatus_documento().equals("TODOS") &&
+                    !dto.getStatus_documento().equals("")) {
+                statusDocumento = StatusDocumento.valueOf(dto.getStatus_documento());
+            }
+        }
+
         PageRequest pageRequest = PageRequest.of(
                 page,
                 size,
                 Sort.Direction.ASC,
                 EXPIRA_STR);
 
-        if (tipoDocumento != null) {
-            return arquivoRepository
-                    .buscarArquivosPaginadosFilterComTipoDoc(
-                            dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
-                            dto.getCnpj_empresa().trim(), tipoDocumento.ordinal()
-                            , pageRequest);
+        if (tipoDocumento != null && statusDocumento != null) {
+            return this.aplicarFiltroComTipoDocEStatusDocEResto(dto, tipoDocumento, statusDocumento, pageRequest);
         } else {
-            return arquivoRepository
-                    .buscarArquivosPaginadosFilterSemTipoDoc(
-                            dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
-                            dto.getCnpj_empresa().trim(), pageRequest);
+            if (tipoDocumento != null) {
+                return this.aplicarFiltroComTipoDocEResto(dto, tipoDocumento, pageRequest);
+            } else {
+                if (statusDocumento != null) {
+                    return this.aplicarFiltroComStatusDocEResto(dto, statusDocumento, pageRequest);
+                } else {
+                    return this.aplicarFiltroSemTipoDocEStatusDoc(dto, pageRequest);
+                }
+            }
         }
+    }
+
+    private Page<ArquivoProjection> aplicarFiltroComTipoDocEStatusDocEResto(
+            ArquivoFilterDTO dto, TipoDocumento tipoDocumento, StatusDocumento statusDocumento,
+            PageRequest pageRequest
+    ) {
+        return arquivoRepository
+                .buscarArquivosPaginadosFilterComTipoDocEStatusDoc(
+                        dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
+                        dto.getCnpj_empresa().trim(), tipoDocumento.ordinal(),
+                        statusDocumento.ordinal(), pageRequest);
+    }
+
+    private Page<ArquivoProjection> aplicarFiltroComTipoDocEResto(
+            ArquivoFilterDTO dto, TipoDocumento tipoDocumento, PageRequest pageRequest
+    ) {
+        return arquivoRepository
+                .buscarArquivosPaginadosFilterComTipoDoc(
+                        dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
+                        dto.getCnpj_empresa().trim(), tipoDocumento.ordinal()
+                        , pageRequest);
+    }
+
+    private Page<ArquivoProjection> aplicarFiltroComStatusDocEResto(
+            ArquivoFilterDTO dto, StatusDocumento statusDocumento, PageRequest pageRequest
+    ) {
+        return arquivoRepository
+                .buscarArquivosPaginadosFilterComStatusDoc(
+                        dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
+                        dto.getCnpj_empresa().trim(), statusDocumento.ordinal()
+                        , pageRequest);
+    }
+
+    private Page<ArquivoProjection> aplicarFiltroSemTipoDocEStatusDoc(
+            ArquivoFilterDTO dto, PageRequest pageRequest
+    ) {
+        return arquivoRepository
+                .buscarArquivosPaginadosFilterSemTipoDoc(
+                        dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
+                        dto.getCnpj_empresa().trim(), pageRequest);
     }
 
     @Override
@@ -242,6 +293,7 @@ public class ArquivoServiceImpl implements ArquivoService {
                     clienteAchado.setData_emissao(dto.getData_emissao());
                     clienteAchado.setData_vencimento(dto.getData_vencimento());
                     clienteAchado.setObservacao(dto.getObservacao());
+                    clienteAchado.setStatus_documento(dto.getStatus_documento());
 
                     return arquivoRepository.save(clienteAchado);
                 })
@@ -253,6 +305,11 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     public List<TipoDocumento> listaTipoDoc() {
         return List.of(TipoDocumento.values());
+    }
+
+    @Override
+    public List<StatusDocumento> listaStatusDocumento() {
+        return List.of(StatusDocumento.values());
     }
 
     @Override

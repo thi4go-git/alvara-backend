@@ -1,9 +1,9 @@
 package br.com.alvara.service;
 
 import br.com.alvara.model.entity.Arquivo;
+import br.com.alvara.model.enums.StatusDocumento;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
-import br.com.alvara.model.repository.projection.impl.ArquivoProjectionImpl;
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
 import br.com.alvara.rest.dto.ArquivoFilterDTO;
 import org.springframework.data.domain.Page;
@@ -34,6 +34,8 @@ public interface ArquivoService {
     void atualizarPorId(ArquivoDTO dto);
 
     List<TipoDocumento> listaTipoDoc();
+
+    List<StatusDocumento> listaStatusDocumento();
 
     void deletarPorId(Integer id);
 

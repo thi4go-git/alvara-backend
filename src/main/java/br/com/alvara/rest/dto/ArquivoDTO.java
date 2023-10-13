@@ -1,6 +1,7 @@
 package br.com.alvara.rest.dto;
 
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.StatusDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,4 +38,6 @@ public class ArquivoDTO {
     private Integer expira;
 
     private String observacao;
+
+    private StatusDocumento status_documento = null;
 }

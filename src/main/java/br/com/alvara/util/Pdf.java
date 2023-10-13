@@ -1,7 +1,8 @@
 package br.com.alvara.util;
 
 import br.com.alvara.model.entity.Arquivo;
-import br.com.alvara.model.tipo.TipoDocumento;
+import br.com.alvara.model.enums.StatusDocumento;
+import br.com.alvara.model.enums.TipoDocumento;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
