@@ -1,8 +1,10 @@
 package br.com.alvara.service.implementation;
 
+import br.com.alvara.exception.GeralException;
 import br.com.alvara.model.entity.Usuario;
 import br.com.alvara.model.repository.UsuarioRepository;
 import br.com.alvara.rest.dto.UsuarioDTO;
+import br.com.alvara.rest.mapper.UsuarioMapper;
 import br.com.alvara.service.UsuarioService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import javax.servlet.http.Part;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
+
 
 @Service
 public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
@@ -34,11 +36,17 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
+    private static final String MSG_USER_NOTFOUND = "Usuário não encontrado com o ID informado!";
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = repository
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Login Não encontrado!"));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o username informado!"));
 
         if (usuario.isAtivo()) {
             return User
@@ -48,7 +56,7 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
                     .roles(usuario.getRole())
                     .build();
         } else {
-            throw new UsernameNotFoundException("Usuário desativado!");
+            throw new GeralException("Usuário está desativado!");
         }
     }
 
@@ -61,13 +69,11 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
     }
 
     @Override
-    public Usuario salvarDto(UsuarioDTO dto) {
-        String senhaCript = passwordEncoder.encode(dto.getPassword());
-        dto.setPassword(senhaCript);
+    public Usuario salvarDto(UsuarioDTO usuarioDTO) {
+        String senhaCript = passwordEncoder.encode(usuarioDTO.getPassword());
+        usuarioDTO.setPassword(senhaCript);
 
-        Usuario usuario = new Usuario(dto);
-
-        return repository.save(usuario);
+        return repository.save(usuarioMapper.UsuarioDTOtoUsuario(usuarioDTO));
     }
 
     @Override
@@ -95,29 +101,38 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
     @Override
     @Transactional
     public byte[] adicionarFoto(Integer idUser, Part arquivo) {
-        Optional<Usuario> usuario = repository.findById(idUser);
-        return usuario.map(c -> {
-            try {
-                InputStream is = arquivo.getInputStream();
-                byte[] bytes = new byte[(int) arquivo.getSize()];
-                IOUtils.readFully(is, bytes);
-                c.setFoto(bytes);
-                repository.save(c);
-                is.close();
-                return bytes;
-            } catch (IOException ex) {
-                return null;
-            }
-        }).orElse(null);
+        repository.
+                findById(idUser)
+                .map(achado -> {
+                    try {
+                        InputStream is = arquivo.getInputStream();
+                        byte[] bytes = new byte[(int) arquivo.getSize()];
+                        IOUtils.readFully(is, bytes);
+                        achado.setFoto(bytes);
+                        repository.save(achado);
+                        is.close();
+                        return bytes;
+                    } catch (IOException e) {
+                        throw new GeralException("Erro ao converter foto stream para byte");
+                    }
+                })
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
+
+        throw new GeralException("Erro ao adicionar foto");
     }
 
     @Override
-    public void ativarDesativarUsuario(Integer id) {
-        Optional<Usuario> usuario = repository.findById(id);
-        usuario.ifPresent(c -> {
-            c.setAtivo(!c.isAtivo());
-            repository.save(c);
-        });
+    public void ativarDesativarUsuario(Integer idUser) {
+        repository.
+                findById(idUser)
+                .map(achado -> {
+                    achado.setAtivo(!achado.isAtivo());
+                    repository.save(achado);
+                    return Void.TYPE;
+                })
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
     }
 
     @Override
@@ -130,10 +145,11 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
                     } else {
                         usuarioAchado.setRole("ADMIN");
                     }
-                    return repository.save(usuarioAchado);
+                    repository.save(usuarioAchado);
+                    return Void.TYPE;
                 })
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado para definir Role!"));
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
 
     }
 
@@ -146,7 +162,7 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
                     return Void.TYPE;
                 })
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado para deletar!"));
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
     }
 
 

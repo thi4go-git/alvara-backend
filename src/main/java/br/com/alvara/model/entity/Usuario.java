@@ -1,7 +1,5 @@
 package br.com.alvara.model.entity;
 
-
-import br.com.alvara.rest.dto.UsuarioDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,13 +43,4 @@ public class Usuario {
 
     @Column
     private byte[] foto;
-
-    public Usuario(UsuarioDTO dto) {
-        this.username = dto.getUsername();
-        this.password = dto.getPassword();
-        this.role = "USER";
-        this.ativo = false;
-        this.nome = dto.getNome();
-        this.cpf = dto.getCpf();
-    }
 }
