@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  alvara-backend:
+    container_name: ALVARA_BACKEND
+    image: thiadocker/alvara-backend:latest    
+    ports:
+      - "8090:8080"
+    restart: always     
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://cloudtecnologia.dynns.com:5432/alvara
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 895674
+      SPRING_JPA_DATABASE-PLATFORM: org.hibernate.dialect.PostgreSQLDialect 
+  alvara-frontend:
+    container_name: ALVARA_FRONTEND
+    image: thiadocker/alvara-frontend:latest  
+    ports:
+      - 3001:80
+    restart: always
+    depends_on:
+      - alvara-backend
+    environment:
+      API_URL: http://cloudtecnologia.dynns.com:8090
