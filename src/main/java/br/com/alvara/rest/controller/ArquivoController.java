@@ -5,6 +5,7 @@ import br.com.alvara.model.enums.StatusDocumento;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.enums.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
+import br.com.alvara.rest.dto.ArquivoDownloadDTO;
 import br.com.alvara.rest.dto.ArquivoFilterDTO;
 import br.com.alvara.rest.dto.ArquivoResponseDTO;
 import br.com.alvara.rest.mapper.ArquivoMapper;
@@ -164,11 +165,11 @@ public class ArquivoController {
             @ApiResponse(responseCode = "500", description = SERVER_ERROR),
             @ApiResponse(responseCode = "404", description = ARQUIVO_NOTFOUND)
     })
-    public ResponseEntity<ArquivoResponseDTO> buscarPorId(
+    public ResponseEntity<ArquivoDownloadDTO> buscarPorId(
             @PathVariable("id") @NotBlank(message = CAMPO_ID_OBRIGATORIO) final Integer id
     ) {
         Arquivo arquivo = arquivoService.buscarrPorId(id);
-        return ResponseEntity.ok().body(arquivoMapper.arquivoToArquivoResponseDTO(arquivo));
+        return ResponseEntity.ok().body(arquivoMapper.arquivoToArquivoDownloadDTO(arquivo));
     }
 
     @PutMapping("/atualizar")

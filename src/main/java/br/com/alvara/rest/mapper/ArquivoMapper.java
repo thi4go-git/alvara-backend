@@ -1,6 +1,7 @@
 package br.com.alvara.rest.mapper;
 
 import br.com.alvara.model.entity.Arquivo;
+import br.com.alvara.rest.dto.ArquivoDownloadDTO;
 import br.com.alvara.rest.dto.ArquivoResponseDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,10 @@ public class ArquivoMapper {
 
     public ArquivoResponseDTO arquivoToArquivoResponseDTO(Arquivo arquivo) {
         return modelMapper.map(arquivo, ArquivoResponseDTO.class);
+    }
+
+    public ArquivoDownloadDTO arquivoToArquivoDownloadDTO(Arquivo arquivo) {
+        return modelMapper.map(arquivo, ArquivoDownloadDTO.class);
     }
 
 }
