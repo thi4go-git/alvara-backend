@@ -39,6 +39,8 @@ public class ArquivoServiceImpl implements ArquivoService {
 
     private static final String EXPIRA_STR = "EXPIRA";
 
+    private static final String ARQUIVO_NOTFOUND = "Arquivo não localizado!";
+
 
     @Autowired
     private ArquivoRepository arquivoRepository;
@@ -76,7 +78,7 @@ public class ArquivoServiceImpl implements ArquivoService {
 
                     })
                     .orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado para atualizar!"));
+                            new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
         }
     }
 
@@ -119,7 +121,7 @@ public class ArquivoServiceImpl implements ArquivoService {
         return arquivoRepository
                 .findById(id)
                 .map(Arquivo::getPdf)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado para deletar!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
     }
 
     @Override
@@ -275,8 +277,7 @@ public class ArquivoServiceImpl implements ArquivoService {
         return arquivoRepository.
                 findById(id)
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado Pelo ID !"));
-
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
     }
 
     @Override
@@ -284,7 +285,6 @@ public class ArquivoServiceImpl implements ArquivoService {
         arquivoRepository.
                 findById(dto.getId())
                 .map(clienteAchado -> {
-
                     clienteAchado.setTipo_doc(dto.getTipo_doc());
                     clienteAchado.setNome_arquivo(dto.getNome_arquivo());
                     clienteAchado.setNumero_alvara(dto.getNumero_alvara());
@@ -298,7 +298,7 @@ public class ArquivoServiceImpl implements ArquivoService {
                     return arquivoRepository.save(clienteAchado);
                 })
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado para atualizar!"));
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
     }
 
 
@@ -322,7 +322,7 @@ public class ArquivoServiceImpl implements ArquivoService {
                     return Void.TYPE;
                 })
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado para deletar!"));
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
     }
 
     @Override
