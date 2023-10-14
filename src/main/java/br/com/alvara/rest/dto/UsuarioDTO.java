@@ -30,4 +30,9 @@ public class UsuarioDTO {
     @CPFunico
     private String cpf;
 
+    @Email(message = "{campo.email.invalido}")
+    private String email;
+
+    private String celular;
+
 }
