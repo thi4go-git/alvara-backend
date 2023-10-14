@@ -68,7 +68,8 @@ public class UsuarioController {
         return ResponseEntity.ok().body(pageUsuario);
     }
 
-    @PutMapping("/{id}/foto")
+
+    @PutMapping("/{id}/adicionar-foto")
     @Operation(summary = "Adicionar Foto", description = "Adicionar foto para o Usuário")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Foto adicionada."),

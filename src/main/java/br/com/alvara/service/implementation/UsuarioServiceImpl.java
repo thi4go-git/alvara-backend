@@ -24,6 +24,7 @@ import javax.servlet.http.Part;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 
 @Service
@@ -101,25 +102,22 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
     @Override
     @Transactional
     public byte[] adicionarFoto(Integer idUser, Part arquivo) {
-        repository.
-                findById(idUser)
-                .map(achado -> {
+        Optional<Usuario> usuario = repository.findById(idUser);
+        return usuario.map(c -> {
                     try {
                         InputStream is = arquivo.getInputStream();
                         byte[] bytes = new byte[(int) arquivo.getSize()];
                         IOUtils.readFully(is, bytes);
-                        achado.setFoto(bytes);
-                        repository.save(achado);
+                        c.setFoto(bytes);
+                        repository.save(c);
                         is.close();
                         return bytes;
-                    } catch (IOException e) {
-                        throw new GeralException("Erro ao converter foto stream para byte");
+                    } catch (IOException ex) {
+                        throw new GeralException("Erro ao converter stream foto para Bytes");
                     }
                 })
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
-
-        throw new GeralException("Erro ao adicionar foto");
     }
 
     @Override
