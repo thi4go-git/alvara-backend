@@ -2,14 +2,10 @@ package br.com.alvara.utils;
 
 import br.com.alvara.extrator.Pdf;
 import br.com.alvara.model.entity.Arquivo;
-import br.com.alvara.service.implementation.ArquivoServiceImpl;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.FileOutputStream;
