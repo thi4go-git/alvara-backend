@@ -24,8 +24,8 @@ public class DevelopmentConfig {
     @Bean
     public CommandLineRunner executar() {
         return args -> {
-            LOG.info("######### " + appName + " #########");
-            LOG.info("######### EXECUTANDO AMBIENTE DE DESENVOLVIMENTO #########");
+            LOG.info(":::" + appName + ":::");
+            LOG.info("::: EXECUTANDO AMBIENTE DE DESENVOLVIMENTO :::");
         };
     }
 

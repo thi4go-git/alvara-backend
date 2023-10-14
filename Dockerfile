@@ -1,4 +1,4 @@
-FROM maven:3.8.6-jdk-11 as build
+FROM maven:3.8.6-jdk-11 AS build
 WORKDIR /build
 COPY . .
 RUN mvn clean package -P production -DskipTests

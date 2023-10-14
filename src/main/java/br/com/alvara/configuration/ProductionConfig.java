@@ -19,8 +19,8 @@ public class ProductionConfig {
     @Bean
     public CommandLineRunner executar() {
         return args -> {
-            LOG.info("######### " + appName + " #########");
-            LOG.info("######### EXECUTANDO AMBIENTE DE PROCUÇÃO #########");
+            LOG.info(":::" + appName + ":::");
+            LOG.info("::: EXECUTANDO AMBIENTE DE PROCUÇÃO :::");
         };
     }
 }

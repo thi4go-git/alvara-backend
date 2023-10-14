@@ -74,7 +74,7 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
         String senhaCript = passwordEncoder.encode(usuarioDTO.getPassword());
         usuarioDTO.setPassword(senhaCript);
 
-        return repository.save(usuarioMapper.UsuarioDTOtoUsuario(usuarioDTO));
+        return repository.save(usuarioMapper.usuarioDTOtoUsuario(usuarioDTO));
     }
 
     @Override

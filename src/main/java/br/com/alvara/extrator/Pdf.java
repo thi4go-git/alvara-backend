@@ -1,13 +1,13 @@
-package br.com.alvara.util;
+package br.com.alvara.extrator;
 
 import br.com.alvara.model.entity.Arquivo;
-import br.com.alvara.model.enums.StatusDocumento;
 import br.com.alvara.model.enums.TipoDocumento;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Locale;
 
+@Component
 public class Pdf {
 
     private static final Logger LOG = LoggerFactory.getLogger(Pdf.class);
@@ -63,30 +64,7 @@ public class Pdf {
         return new Arquivo(bytes);
     }
 
-    public File byteTofile(byte[] bytesArquivo, String nome) {
-        File pdfExistente = new File(nome);
-        if (pdfExistente.exists()) {
-            Path pdfPath = pdfExistente.toPath();
-            try {
-                Files.delete(pdfPath);
-                LOG.info("Arquivo excluído com sucesso.");
-            } catch (IOException e) {
-                LOG.error("Falha ao excluir o arquivo. " + e.getMessage());
-            }
-        }
-        File file;
-        try {
-            byte[] bytes = bytesArquivo;
-            file = new File(nome);
-            try (FileOutputStream fos = new FileOutputStream(file)) {
-                fos.write(bytes);
-            }
-            return file;
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
-        }
-        return null;
-    }
+
 
     public TipoDocumento retornarTipoDocumento(String txt) {
         try {

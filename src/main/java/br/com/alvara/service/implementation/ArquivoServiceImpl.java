@@ -4,15 +4,12 @@ import br.com.alvara.exception.GeralException;
 import br.com.alvara.model.entity.Arquivo;
 import br.com.alvara.model.enums.StatusDocumento;
 import br.com.alvara.rest.dto.ArquivoFilterDTO;
-import br.com.alvara.util.Pdf;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.model.repository.ArquivoRepository;
 import br.com.alvara.model.enums.TipoDocumento;
 import br.com.alvara.rest.dto.ArquivoDTO;
 import br.com.alvara.service.ArquivoService;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import br.com.alvara.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -21,11 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.Part;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,9 +25,6 @@ import java.util.Objects;
 
 @Service
 public class ArquivoServiceImpl implements ArquivoService {
-
-    Pdf pdfClass = new Pdf();
-    private static final Logger LOG = LoggerFactory.getLogger(ArquivoServiceImpl.class);
 
     private static final String EXPIRA_STR = "EXPIRA";
 
@@ -48,7 +37,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     @Transactional
     public Arquivo salvarArquivo(Part arquivoNovo) {
-        Arquivo novo = converterPartParaAquivo(arquivoNovo);
+        Arquivo novo = FileUtils.converterPdfParaAquivo(arquivoNovo);
         if (novo != null) {
             return arquivoRepository.save(novo);
         } else {
@@ -59,7 +48,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     @Transactional
     public void atualizarPdf(Part pdfUpdate, Integer id) {
-        Arquivo novo = converterPartParaAquivo(pdfUpdate);
+        Arquivo novo = FileUtils.converterPdfParaAquivo(pdfUpdate);
         if (novo != null) {
             arquivoRepository.
                     findById(id)
@@ -82,39 +71,6 @@ public class ArquivoServiceImpl implements ArquivoService {
         }
     }
 
-    public Arquivo converterPartParaAquivo(Part arquivoPart) {
-        InputStream is = null;
-        try {
-            is = arquivoPart.getInputStream();
-            byte[] bytes = new byte[(int) arquivoPart.getSize()];
-            IOUtils.readFully(is, bytes);
-
-            File arqPdf = pdfClass.byteTofile(bytes, arquivoPart.getSubmittedFileName());
-            Arquivo arquivoObtido = pdfClass.lerPdf(arqPdf, bytes);
-
-            if (arqPdf.exists()) {
-                Path pdfPath = arqPdf.toPath();
-                try {
-                    Files.delete(pdfPath);
-                    LOG.info("Arquivo excluído com sucesso.");
-                } catch (IOException e) {
-                    LOG.error("Falha ao excluir o arquivo. " + e.getMessage());
-                }
-            }
-
-            is.close();
-
-            return arquivoObtido;
-
-        } catch (IOException e) {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                LOG.error("Erro método partToArquivo " + ex.getCause());
-            }
-        }
-        return null;
-    }
 
     @Override
     public byte[] baixarArquivo(int id) {
@@ -129,21 +85,18 @@ public class ArquivoServiceImpl implements ArquivoService {
 
         TipoDocumento tipoDocumento = null;
 
-        if (Objects.nonNull(dto.getTipo_doc())) {
-            if (!dto.getTipo_doc().equals("TODOS") &&
-                    !dto.getTipo_doc().equals("")) {
-                tipoDocumento = TipoDocumento.valueOf(dto.getTipo_doc());
-            }
+        if (Objects.nonNull(dto.getTipo_doc()) && !dto.getTipo_doc().equals("TODOS") &&
+                !dto.getTipo_doc().equals("")) {
+            tipoDocumento = TipoDocumento.valueOf(dto.getTipo_doc());
         }
 
         StatusDocumento statusDocumento = null;
 
-        if (Objects.nonNull(dto.getStatus_documento())) {
-            if (!dto.getStatus_documento().equals("TODOS") &&
-                    !dto.getStatus_documento().equals("")) {
-                statusDocumento = StatusDocumento.valueOf(dto.getStatus_documento());
-            }
+        if (Objects.nonNull(dto.getStatus_documento()) && !dto.getStatus_documento().equals("TODOS") &&
+                !dto.getStatus_documento().equals("")) {
+            statusDocumento = StatusDocumento.valueOf(dto.getStatus_documento());
         }
+
 
         PageRequest pageRequest = PageRequest.of(
                 page,

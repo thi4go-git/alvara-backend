@@ -17,7 +17,7 @@ public class UsuarioMapper {
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
 
-    public Usuario UsuarioDTOtoUsuario(UsuarioDTO usuarioDTO) {
+    public Usuario usuarioDTOtoUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = modelMapper.map(usuarioDTO, Usuario.class);
         usuario.setRole("USER");
         usuario.setAtivo(false);
