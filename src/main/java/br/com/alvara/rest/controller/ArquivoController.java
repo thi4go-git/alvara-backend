@@ -74,19 +74,6 @@ public class ArquivoController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/download/{id}")
-    @Operation(summary = "Baixa PDF", description = "Baixar PDF")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "PDF Baixado!"),
-            @ApiResponse(responseCode = "500", description = SERVER_ERROR),
-            @ApiResponse(responseCode = "404", description = ARQUIVO_NOTFOUND)
-    })
-    public ResponseEntity<byte[]> baixarArquivo(
-            @PathVariable("id") @NotBlank(message = CAMPO_ID_OBRIGATORIO) final Integer id
-    ) {
-        return ResponseEntity.ok().body(arquivoService.baixarArquivo(id));
-    }
-
     @PostMapping("/listar-matcher")
     @Operation(summary = "Listar com Filtros", description = "Este endpoint Lista Paginandodo + Filtros")
     @ApiResponses(value = {
