@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.Part;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -86,14 +86,14 @@ public class ArquivoServiceImpl implements ArquivoService {
         TipoDocumento tipoDocumento = null;
 
         if (Objects.nonNull(dto.getTipo_doc()) && !dto.getTipo_doc().equals("TODOS") &&
-                !dto.getTipo_doc().equals("")) {
+                !dto.getTipo_doc().isEmpty()) {
             tipoDocumento = TipoDocumento.valueOf(dto.getTipo_doc());
         }
 
         StatusDocumento statusDocumento = null;
 
         if (Objects.nonNull(dto.getStatus_documento()) && !dto.getStatus_documento().equals("TODOS") &&
-                !dto.getStatus_documento().equals("")) {
+                !dto.getStatus_documento().isEmpty()) {
             statusDocumento = StatusDocumento.valueOf(dto.getStatus_documento());
         }
 
@@ -167,12 +167,11 @@ public class ArquivoServiceImpl implements ArquivoService {
                 size,
                 Sort.Direction.ASC,
                 EXPIRA_STR);
-        List<ArquivoProjection> lista = new ArrayList<>();
-        for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
-            if (arquivo.getData_vencimento() != null && arquivo.getExpira() <= 0) {
-                lista.add(arquivo);
-            }
-        }
+
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream()
+                .filter(arquivo -> arquivo.getData_vencimento() != null && arquivo.getExpira() <= 0)
+                .collect(Collectors.toList());
+
         return new PageImpl<>(lista, pageRequest, size);
     }
 
@@ -183,13 +182,11 @@ public class ArquivoServiceImpl implements ArquivoService {
                 size,
                 Sort.Direction.ASC,
                 EXPIRA_STR);
-        List<ArquivoProjection> lista = new ArrayList<>();
-        for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
-            if (arquivo.getExpira() > 0 &&
-                    arquivo.getExpira() <= 60) {
-                lista.add(arquivo);
-            }
-        }
+
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream()
+                .filter(arquivo -> arquivo.getExpira() > 0 && arquivo.getExpira() <= 60)
+                .collect(Collectors.toList());
+
         return new PageImpl<>(lista, pageRequest, size);
     }
 
@@ -200,12 +197,11 @@ public class ArquivoServiceImpl implements ArquivoService {
                 size,
                 Sort.Direction.ASC,
                 EXPIRA_STR);
-        List<ArquivoProjection> lista = new ArrayList<>();
-        for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
-            if (arquivo.getData_vencimento() == null) {
-                lista.add(arquivo);
-            }
-        }
+
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream()
+                .filter(arquivo -> arquivo.getData_vencimento() == null)
+                .collect(Collectors.toList());
+
         return new PageImpl<>(lista, pageRequest, size);
     }
 
@@ -216,12 +212,11 @@ public class ArquivoServiceImpl implements ArquivoService {
                 size,
                 Sort.Direction.ASC,
                 EXPIRA_STR);
-        List<ArquivoProjection> lista = new ArrayList<>();
-        for (ArquivoProjection arquivo : arquivoRepository.listarTodosList()) {
-            if (arquivo.getExpira() > 60) {
-                lista.add(arquivo);
-            }
-        }
+
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream()
+                .filter(arquivo -> arquivo.getExpira() > 60)
+                .collect(Collectors.toList());
+
         return new PageImpl<>(lista, pageRequest, size);
     }
 
