@@ -6,6 +6,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,10 +16,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Component
-public class FileUtils {
+public abstract class FileUtils {
 
 
-    private FileUtils (){}
+    private FileUtils() {
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(FileUtils.class);
 

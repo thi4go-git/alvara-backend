@@ -8,10 +8,13 @@ import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Locale;
+
+import static br.com.alvara.utils.DataUtils.retornarMes;
 
 @Component
 public class Pdf {
@@ -20,11 +23,20 @@ public class Pdf {
     private static final String NAO_ENCONTRADO = "Não Localizado!";
     private static final String CNPJ_NULO = "00000000000000";
     private static final String INDEX_CNPJ = "CNPJ:";
+    private static final String TAG_NUM_ESTABALEC_EMPRESARIAL = "ESTABELECIMENTOEMPRESARIALNÚMERO";
+    private static final String TAG_NUM_LICENCA = "Nº DA LICENÇA:";
+    private static final String TAG_ESTABELECIMENTO_NUM = "ESTABELECIMENTO.NÚMERO";
+    private static final String TAG_CERTIFICADO_PROTOCOLO = "CERTIFICADAPROTOCOLO:";
+    private static final String TAG_NOME_EMPRESA = "NOME DA EMPRESA: ";
+    private static final String TAG_RAZAO_SOCIAL = "RAZÃO SOCIAL: ";
+    private static final String TAG_LIC_AMBIENTAL = "CONCEDE A LICENÇA AMBIENTAL DECLARATÓRIA A";
+    private static final String TAG_RISCO_NOME = "DE RISCONOME FANTASIA";
+    private static final String TAG_DE = "DE";
+    private static final String SEPARADOR_COLCHETE_BARRA = "[/]";
+    private static final String SEPARADOR_COLCHETE_VIRGULA = "[,]";
 
 
     public Arquivo lerPdf(File pdf, byte[] bytes) {
-
-        Arquivo arquivo = new Arquivo();
         try (PDDocument document = PDDocument.load(pdf)) {
             if (!document.isEncrypted()) {
 
@@ -42,24 +54,26 @@ public class Pdf {
 
                 String txtStr = txtBuilder.toString();
 
-                arquivo.setPdf(bytes);
-                arquivo.setNome_arquivo(pdf.getName());
-                arquivo.setTipo_doc(retornarTipoDocumento(txtStr));
-                arquivo.setNumero_alvara(retornarNumeroDocumento(txtStr));
-                arquivo.setNome_empresa(retornarNomeEmpresa(txtStr));
-                arquivo.setCnpj_empresa(retornarCnpj(txtStr, arquivo.getTipo_doc()));
-                arquivo.setData_emissao(retornarDtEmissao(txtStr, arquivo.getTipo_doc()));
-                arquivo.setData_vencimento(retornarDtVencimento(txtStr, arquivo.getTipo_doc(),
-                        arquivo.getData_emissao()));
+                TipoDocumento tipoDoc = retornarTipoDocumento(txtStr);
+                LocalDate dataEmissao = retornarDtEmissao(txtStr, tipoDoc);
 
-                return arquivo;
+                return Arquivo.builder()
+                        .pdf(bytes)
+                        .nomeArquivo(pdf.getName())
+                        .tipoDoc(tipoDoc)
+                        .numeroAlvara(retornarNumeroDocumento(txtStr))
+                        .nomeEmpresa(retornarNomeEmpresa(txtStr))
+                        .cnpjEmpresa(retornarCnpj(txtStr, tipoDoc))
+                        .dataEmissao(dataEmissao)
+                        .dataVencimento(retornarDtVencimento(txtStr, tipoDoc, dataEmissao))
+                        .build();
             }
         } catch (IOException e) {
+            // Não tratar erro aqui
             LOG.info(e.toString());
         }
         return new Arquivo(bytes);
     }
-
 
 
     public TipoDocumento retornarTipoDocumento(String txt) {
@@ -87,27 +101,27 @@ public class Pdf {
 
     public String retornarNumeroDocumento(String txt) {
         try {
-            if (txt.contains("Nº DA LICENÇA:")) {
-                String tagIni = "Nº DA LICENÇA:";
+            if (txt.contains(TAG_NUM_LICENCA)) {
+                String tagIni = TAG_NUM_LICENCA;
                 String tagFim = "CCP:";
                 int ini = txt.indexOf(tagIni);
                 int fim = txt.indexOf(tagFim);
                 return txt.substring(ini, fim).replace(tagIni, "").trim();
             } else {
-                if (txt.contains("ESTABELECIMENTOEMPRESARIALNÚMERO")) {
-                    String tagIni = "ESTABELECIMENTOEMPRESARIALNÚMERO";
+                if (txt.contains(TAG_NUM_ESTABALEC_EMPRESARIAL)) {
+                    String tagIni = TAG_NUM_ESTABALEC_EMPRESARIAL;
                     int ini = txt.indexOf(tagIni);
-                    String numero = txt.substring(ini, txt.length()).replace(tagIni, "").trim();
+                    String numero = txt.substring(ini).replace(tagIni, "").trim();
                     return refatoraNumero(numero);
                 } else {
-                    if (txt.contains("ESTABELECIMENTO.NÚMERO")) {
-                        String tagIni = "ESTABELECIMENTO.NÚMERO";
+                    if (txt.contains(TAG_ESTABELECIMENTO_NUM)) {
+                        String tagIni = TAG_ESTABELECIMENTO_NUM;
                         int ini = txt.indexOf(tagIni);
-                        String numero = txt.substring(ini, txt.length()).replace(tagIni, "").trim();
+                        String numero = txt.substring(ini).replace(tagIni, "").trim();
                         return refatoraNumero(numero);
                     } else {
-                        if (txt.contains("CERTIFICADAPROTOCOLO:")) {
-                            String tagIni = "CERTIFICADAPROTOCOLO:";
+                        if (txt.contains(TAG_CERTIFICADO_PROTOCOLO)) {
+                            String tagIni = TAG_CERTIFICADO_PROTOCOLO;
                             int ini = txt.indexOf(tagIni);
                             int fim = txt.indexOf(INDEX_CNPJ);
                             String numero = txt.substring(ini, fim).replace(tagIni, "").trim();
@@ -124,28 +138,28 @@ public class Pdf {
 
     public String retornarNomeEmpresa(String txt) {
         try {
-            if (txt.contains("NOME DA EMPRESA: ")) {
-                String tagIni = "NOME DA EMPRESA: ";
+            if (txt.contains(TAG_NOME_EMPRESA)) {
+                String tagIni = TAG_NOME_EMPRESA;
                 int ini = txt.indexOf(tagIni);
                 int fim = txt.indexOf(INDEX_CNPJ);
                 return txt.substring(ini, fim).replace(tagIni, "").trim();
             } else {
-                if (txt.contains("RAZÃO SOCIAL: ")) {
-                    String tagIni = "RAZÃO SOCIAL: ";
+                if (txt.contains(TAG_RAZAO_SOCIAL)) {
+                    String tagIni = TAG_RAZAO_SOCIAL;
                     int ini = txt.indexOf(tagIni);
                     int fim = txt.indexOf(INDEX_CNPJ);
                     return txt.substring(ini, fim).replace(tagIni, "");
                 } else {
-                    if (txt.contains("CONCEDE A LICENÇA AMBIENTAL DECLARATÓRIA A ")) {
-                        String tagIni = "CONCEDE A LICENÇA AMBIENTAL DECLARATÓRIA A";
+                    if (txt.contains(TAG_LIC_AMBIENTAL)) {
+                        String tagIni = TAG_LIC_AMBIENTAL;
                         String tagFim = ", INSCRITA NO CNPJ";
                         int ini = txt.indexOf(tagIni);
                         int fim = txt.indexOf(tagFim);
                         return txt.substring(ini, fim).replace(tagIni
                                 , "");
                     } else {
-                        if (txt.contains("DE RISCONOME FANTASIA")) {
-                            String tagIni = "DE RISCONOME FANTASIA";
+                        if (txt.contains(TAG_RISCO_NOME)) {
+                            String tagIni = TAG_RISCO_NOME;
                             String tagFim = "FONE(";
                             int ini = txt.indexOf(tagIni);
                             int fim = txt.indexOf(tagFim);
@@ -166,10 +180,10 @@ public class Pdf {
         StringBuilder novoNumero = new StringBuilder();
         numero = numero.trim();
 
-        String regex = "[0-9]+";
-        for (int f = 0; f < numero.length(); f++) {
-            if (numero.substring(f, (f + 1)).matches(regex)) {
-                novoNumero.append(numero.substring(f, (f + 1)));
+        String regex = "\\d+";
+        for (int index = 0; index < numero.length(); index++) {
+            if (numero.substring(index, (index + 1)).matches(regex)) {
+                novoNumero.append(numero.charAt(index));
             } else {
                 break;
             }
@@ -237,11 +251,11 @@ public class Pdf {
                 String dataStr = txt.substring(ini, fim)
                         .replace(tagIni, "")
                         .replace(" ", "")
-                        .replace("DE", "/")
+                        .replace(TAG_DE, "/")
                         .trim();
-                String[] obj = dataStr.split("[,]", -1);
+                String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
 
-                String[] objData = obj[1].split("[/]", -1);
+                String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
                 int dia = Integer.parseInt(objData[0]);
                 int mes = Integer.parseInt(retornarMes(objData[1]));
                 int ano = Integer.parseInt(objData[2]);
@@ -256,10 +270,10 @@ public class Pdf {
                     String dataStr = txt.substring(ini, fim)
                             .replace(tagIni, "")
                             .replace(" ", "")
-                            .replace("DE", "/")
+                            .replace(TAG_DE, "/")
                             .trim();
-                    String[] obj = dataStr.split("[,]", -1);
-                    String[] objData = obj[1].split("[/]", -1);
+                    String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
+                    String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
                     int dia = Integer.parseInt(objData[0]);
                     int mes = Integer.parseInt(retornarMes(objData[1]));
                     int ano = Integer.parseInt(objData[2]);
@@ -274,11 +288,11 @@ public class Pdf {
                         String dataStr = txt.substring(ini, fim)
                                 .replace(tagIni, "")
                                 .replace(" ", "")
-                                .replace("DE", "/")
+                                .replace(TAG_DE, "/")
                                 .trim();
-                        String[] obj = dataStr.split("[,]", -1);
+                        String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
 
-                        String[] objData = obj[1].split("[/]", -1);
+                        String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
                         int dia = Integer.parseInt(objData[0]);
                         int mes = Integer.parseInt(retornarMes(objData[1]));
                         int ano = Integer.parseInt(objData[2]);
@@ -293,10 +307,10 @@ public class Pdf {
                             String dataStr = txt.substring(ini, fim)
                                     .replace(tagIni, "")
                                     .replace(" ", "")
-                                    .replace("DE", "/")
+                                    .replace(TAG_DE, "/")
                                     .trim();
 
-                            String[] objData = dataStr.split("[/]", -1);
+                            String[] objData = dataStr.split(SEPARADOR_COLCHETE_BARRA, -1);
                             int dia = Integer.parseInt(objData[0]);
                             int mes = Integer.parseInt(retornarMes(objData[1]));
                             int ano = Integer.parseInt(objData[2]);
@@ -328,11 +342,11 @@ public class Pdf {
                     String dataStr = txt.substring(ini, fim)
                             .replace(tagIni, "")
                             .replace(" ", "")
-                            .replace("DE", "/")
+                            .replace(TAG_DE, "/")
                             .trim();
-                    String[] obj = dataStr.split("[,]", -1);
+                    String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
 
-                    String[] objData = obj[1].split("[/]", -1);
+                    String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
                     int dia = Integer.parseInt(objData[0]);
                     int mes = Integer.parseInt(retornarMes(objData[1]));
                     int ano = Integer.parseInt(objData[2]);
@@ -345,38 +359,6 @@ public class Pdf {
             return null;
         }
         return null;
-    }
-
-
-    public String retornarMes(String mes) {
-        switch (mes) {
-            case "JANEIRO":
-                return "01";
-            case "FEVEREIRO":
-                return "02";
-            case "MARÇO":
-                return "03";
-            case "ABRIL":
-                return "04";
-            case "MAIO":
-                return "05";
-            case "JUNHO":
-                return "06";
-            case "JULHO":
-                return "07";
-            case "AGOSTO":
-                return "08";
-            case "SETEMBRO":
-                return "09";
-            case "OUTUBRO":
-                return "10";
-            case "NOVEMBRO":
-                return "11";
-            case "DEZEMBRO":
-                return "12";
-            default:
-                return "00";
-        }
     }
 
 

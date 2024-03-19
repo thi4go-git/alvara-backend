@@ -4,6 +4,7 @@ import br.com.alvara.model.enums.StatusDocumento;
 import br.com.alvara.model.enums.TipoDocumento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Arquivo {
 
     @Id
@@ -22,28 +24,28 @@ public class Arquivo {
     @Column
     private Integer id;
 
-    @Column
-    private TipoDocumento tipo_doc;
+    @Column(name = "tipo_doc")
+    private TipoDocumento tipoDoc;
 
-    @Column(length = 150)
-    private String nome_arquivo;
+    @Column(name = "nome_arquivo",length = 150)
+    private String nomeArquivo;
 
-    @Column(length = 50)
-    private String numero_alvara;
+    @Column(name = "numeroAlvara",length = 50)
+    private String numeroAlvara;
 
-    @Column(length = 50)
-    private String nome_empresa;
+    @Column(name = "nome_empresa",length = 50)
+    private String nomeEmpresa;
 
-    @Column(length = 14)
-    private String cnpj_empresa;
+    @Column(name="cnpj_empresa",length = 14)
+    private String cnpjEmpresa;
 
-    @Column
+    @Column(name = "data_emissao")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data_emissao;
+    private LocalDate dataEmissao;
 
-    @Column
+    @Column(name = "data_vencimento")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data_vencimento;
+    private LocalDate dataVencimento;
 
     @Column
     private Integer expira;
@@ -54,8 +56,8 @@ public class Arquivo {
     @Column
     private String observacao;
 
-    @Column
-    private StatusDocumento status_documento;
+    @Column(name = "status_documento")
+    private StatusDocumento statusDocumento;
 
     public Arquivo(byte[] pdf) {
         this.pdf = pdf;

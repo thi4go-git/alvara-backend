@@ -16,7 +16,7 @@ import java.util.List;
 public class WebConfig {
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterFilterRegistrationBean() {
-        List<String> todos = Arrays.asList("*");
+        List<String> todos = List.of("*");
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(todos);
         corsConfiguration.setAllowedHeaders(todos);

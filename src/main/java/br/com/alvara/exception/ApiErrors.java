@@ -4,15 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+@Getter
 @AllArgsConstructor
 public class ApiErrors {
-    @Getter
     private List<String> erros;
 
     public ApiErrors(String message) {
-        this.erros = Arrays.asList(message);
+        this.erros = Collections.singletonList(message);
     }
 
 }

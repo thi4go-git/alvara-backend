@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 public class ArquivoServiceImpl implements ArquivoService {
 
     private static final String EXPIRA_STR = "EXPIRA";
-
     private static final String ARQUIVO_NOTFOUND = "Arquivo não localizado!";
+    private static final String TXT_TODOS = "TODOS";
 
 
     @Autowired
@@ -54,13 +54,13 @@ public class ArquivoServiceImpl implements ArquivoService {
                     findById(id)
                     .map(achado -> {
 
-                        achado.setTipo_doc(novo.getTipo_doc());
-                        achado.setNome_arquivo(novo.getNome_arquivo());
-                        achado.setNumero_alvara(novo.getNumero_alvara());
-                        achado.setNome_empresa(novo.getNome_empresa());
-                        achado.setCnpj_empresa(novo.getCnpj_empresa());
-                        achado.setData_emissao(novo.getData_emissao());
-                        achado.setData_vencimento(novo.getData_vencimento());
+                        achado.setTipoDoc(novo.getTipoDoc());
+                        achado.setNomeArquivo(novo.getNomeArquivo());
+                        achado.setNumeroAlvara(novo.getNumeroAlvara());
+                        achado.setNomeEmpresa(novo.getNomeEmpresa());
+                        achado.setCnpjEmpresa(novo.getCnpjEmpresa());
+                        achado.setDataEmissao(novo.getDataEmissao());
+                        achado.setDataVencimento(novo.getDataVencimento());
                         achado.setPdf(novo.getPdf());
 
                         return arquivoRepository.save(achado);
@@ -85,14 +85,14 @@ public class ArquivoServiceImpl implements ArquivoService {
 
         TipoDocumento tipoDocumento = null;
 
-        if (Objects.nonNull(dto.getTipo_doc()) && !dto.getTipo_doc().equals("TODOS") &&
+        if (Objects.nonNull(dto.getTipo_doc()) && !dto.getTipo_doc().equals(TXT_TODOS) &&
                 !dto.getTipo_doc().isEmpty()) {
             tipoDocumento = TipoDocumento.valueOf(dto.getTipo_doc());
         }
 
         StatusDocumento statusDocumento = null;
 
-        if (Objects.nonNull(dto.getStatus_documento()) && !dto.getStatus_documento().equals("TODOS") &&
+        if (Objects.nonNull(dto.getStatus_documento()) && !dto.getStatus_documento().equals(TXT_TODOS) &&
                 !dto.getStatus_documento().isEmpty()) {
             statusDocumento = StatusDocumento.valueOf(dto.getStatus_documento());
         }
@@ -233,15 +233,15 @@ public class ArquivoServiceImpl implements ArquivoService {
         arquivoRepository.
                 findById(dto.getId())
                 .map(clienteAchado -> {
-                    clienteAchado.setTipo_doc(dto.getTipo_doc());
-                    clienteAchado.setNome_arquivo(dto.getNome_arquivo());
-                    clienteAchado.setNumero_alvara(dto.getNumero_alvara());
-                    clienteAchado.setNome_empresa(dto.getNome_empresa());
-                    clienteAchado.setCnpj_empresa(dto.getCnpj_empresa());
-                    clienteAchado.setData_emissao(dto.getData_emissao());
-                    clienteAchado.setData_vencimento(dto.getData_vencimento());
+                    clienteAchado.setTipoDoc(dto.getTipo_doc());
+                    clienteAchado.setNomeArquivo(dto.getNome_arquivo());
+                    clienteAchado.setNumeroAlvara(dto.getNumero_alvara());
+                    clienteAchado.setNomeEmpresa(dto.getNome_empresa());
+                    clienteAchado.setCnpjEmpresa(dto.getCnpj_empresa());
+                    clienteAchado.setDataEmissao(dto.getData_emissao());
+                    clienteAchado.setDataVencimento(dto.getData_vencimento());
                     clienteAchado.setObservacao(dto.getObservacao());
-                    clienteAchado.setStatus_documento(dto.getStatus_documento());
+                    clienteAchado.setStatusDocumento(dto.getStatus_documento());
 
                     return arquivoRepository.save(clienteAchado);
                 })

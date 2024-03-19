@@ -20,7 +20,7 @@ public class OpenApiConfig {
                                 .email("thi4go19@gmail.com")
                                 .url("https://www.linkedin.com/in/thiago-amorim-melo/")
                         )
-                        .version("03/11/2023"));
+                        .version("19/03/2024"));
     }
 
 }
