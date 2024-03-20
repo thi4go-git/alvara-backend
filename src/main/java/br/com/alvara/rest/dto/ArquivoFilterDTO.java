@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArquivoFilterDTO {
-    private String nome_empresa;
-    private String cnpj_empresa;
-    private String numero_alvara;
-    private String tipo_doc;
-    private String status_documento;
+    private String nomeEmpresa;
+    private String cnpjEmpresa;
+    private String numeroAlvara;
+    private String tipoDoc;
+    private String statusDocumento;
 }

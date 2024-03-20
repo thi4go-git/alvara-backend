@@ -14,19 +14,19 @@ import java.time.LocalDate;
 @Data
 public class ArquivoResponseDTO {
     private Integer id;
-    private TipoDocumento tipo_doc;
-    private String nome_arquivo;
-    private String numero_alvara;
-    private String nome_empresa;
-    private String cnpj_empresa;
+    private TipoDocumento tipoDoc;
+    private String nomeArquivo;
+    private String numeroAlvara;
+    private String nomeEmpresa;
+    private String cnpjEmpresa;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data_emissao;
+    private LocalDate dataEmissao;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data_vencimento;
+    private LocalDate dataVencimento;
 
     private Integer expira;
     private String observacao;
-    private StatusDocumento status_documento;
+    private StatusDocumento statusDocumento;
 }

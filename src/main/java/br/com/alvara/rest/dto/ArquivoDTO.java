@@ -17,27 +17,27 @@ public class ArquivoDTO {
 
     private Integer id;
 
-    private TipoDocumento tipo_doc = null;
+    private TipoDocumento tipoDoc = null;
 
-    @NotEmpty(message = "{campo.nome_arquivo.obrigatorio}")
-    private String nome_arquivo;
+    @NotEmpty(message = "{campo.nomeArquivo.obrigatorio}")
+    private String nomeArquivo;
 
-    @NotEmpty(message = "{campo.numero_alvara.obrigatorio}")
-    private String numero_alvara;
+    @NotEmpty(message = "{campo.numeroAlvara.obrigatorio}")
+    private String numeroAlvara;
 
-    @NotEmpty(message = "{campo.nome_empresa.obrigatorio}")
-    private String nome_empresa;
+    @NotEmpty(message = "{campo.nomeEmpresa.obrigatorio}")
+    private String nomeEmpresa;
 
-    @CNPJ(message = "{campo.cnpj_empresa.invalido}")
-    private String cnpj_empresa;
+    @CNPJ(message = "{campo.cnpjEmpresa.invalido}")
+    private String cnpjEmpresa;
 
-    private LocalDate data_emissao;
+    private LocalDate dataEmissao;
 
-    private LocalDate data_vencimento;
+    private LocalDate dataVencimento;
 
     private Integer expira;
 
     private String observacao;
 
-    private StatusDocumento status_documento = null;
+    private StatusDocumento statusDocumento = null;
 }

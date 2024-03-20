@@ -50,34 +50,27 @@ public class ArquivoServiceImpl implements ArquivoService {
     public void atualizarPdf(Part pdfUpdate, Integer id) {
         Arquivo novo = FileUtils.converterPdfParaAquivo(pdfUpdate);
         if (novo != null) {
-            arquivoRepository.
-                    findById(id)
-                    .map(achado -> {
+            arquivoRepository.findById(id).map(achado -> {
 
-                        achado.setTipoDoc(novo.getTipoDoc());
-                        achado.setNomeArquivo(novo.getNomeArquivo());
-                        achado.setNumeroAlvara(novo.getNumeroAlvara());
-                        achado.setNomeEmpresa(novo.getNomeEmpresa());
-                        achado.setCnpjEmpresa(novo.getCnpjEmpresa());
-                        achado.setDataEmissao(novo.getDataEmissao());
-                        achado.setDataVencimento(novo.getDataVencimento());
-                        achado.setPdf(novo.getPdf());
+                achado.setTipoDoc(novo.getTipoDoc());
+                achado.setNomeArquivo(novo.getNomeArquivo());
+                achado.setNumeroAlvara(novo.getNumeroAlvara());
+                achado.setNomeEmpresa(novo.getNomeEmpresa());
+                achado.setCnpjEmpresa(novo.getCnpjEmpresa());
+                achado.setDataEmissao(novo.getDataEmissao());
+                achado.setDataVencimento(novo.getDataVencimento());
+                achado.setPdf(novo.getPdf());
 
-                        return arquivoRepository.save(achado);
+                return arquivoRepository.save(achado);
 
-                    })
-                    .orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
+            }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
         }
     }
 
 
     @Override
     public byte[] baixarArquivo(int id) {
-        return arquivoRepository
-                .findById(id)
-                .map(Arquivo::getPdf)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
+        return arquivoRepository.findById(id).map(Arquivo::getPdf).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
     }
 
     @Override
@@ -85,24 +78,17 @@ public class ArquivoServiceImpl implements ArquivoService {
 
         TipoDocumento tipoDocumento = null;
 
-        if (Objects.nonNull(dto.getTipo_doc()) && !dto.getTipo_doc().equals(TXT_TODOS) &&
-                !dto.getTipo_doc().isEmpty()) {
-            tipoDocumento = TipoDocumento.valueOf(dto.getTipo_doc());
+        if (Objects.nonNull(dto.getTipoDoc()) && !dto.getTipoDoc().equals(TXT_TODOS) && !dto.getTipoDoc().isEmpty()) {
+            tipoDocumento = TipoDocumento.valueOf(dto.getTipoDoc());
         }
 
         StatusDocumento statusDocumento = null;
 
-        if (Objects.nonNull(dto.getStatus_documento()) && !dto.getStatus_documento().equals(TXT_TODOS) &&
-                !dto.getStatus_documento().isEmpty()) {
-            statusDocumento = StatusDocumento.valueOf(dto.getStatus_documento());
+        if (Objects.nonNull(dto.getStatusDocumento()) && !dto.getStatusDocumento().equals(TXT_TODOS) && !dto.getStatusDocumento().isEmpty()) {
+            statusDocumento = StatusDocumento.valueOf(dto.getStatusDocumento());
         }
 
-
-        PageRequest pageRequest = PageRequest.of(
-                page,
-                size,
-                Sort.Direction.ASC,
-                EXPIRA_STR);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, EXPIRA_STR);
 
         if (tipoDocumento != null && statusDocumento != null) {
             return this.aplicarFiltroComTipoDocEStatusDocEResto(dto, tipoDocumento, statusDocumento, pageRequest);
@@ -119,134 +105,70 @@ public class ArquivoServiceImpl implements ArquivoService {
         }
     }
 
-    private Page<ArquivoProjection> aplicarFiltroComTipoDocEStatusDocEResto(
-            ArquivoFilterDTO dto, TipoDocumento tipoDocumento, StatusDocumento statusDocumento,
-            PageRequest pageRequest
-    ) {
-        return arquivoRepository
-                .buscarArquivosPaginadosFilterComTipoDocEStatusDoc(
-                        dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
-                        dto.getCnpj_empresa().trim(), tipoDocumento.ordinal(),
-                        statusDocumento.ordinal(), pageRequest);
+    private Page<ArquivoProjection> aplicarFiltroComTipoDocEStatusDocEResto(ArquivoFilterDTO dto, TipoDocumento tipoDocumento, StatusDocumento statusDocumento, PageRequest pageRequest) {
+        return arquivoRepository.buscarArquivosPaginadosFilterComTipoDocEStatusDoc(dto.getNomeEmpresa().trim(), dto.getNumeroAlvara().trim(), dto.getCnpjEmpresa().trim(), tipoDocumento.ordinal(), statusDocumento.ordinal(), pageRequest);
     }
 
-    private Page<ArquivoProjection> aplicarFiltroComTipoDocEResto(
-            ArquivoFilterDTO dto, TipoDocumento tipoDocumento, PageRequest pageRequest
-    ) {
-        return arquivoRepository
-                .buscarArquivosPaginadosFilterComTipoDoc(
-                        dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
-                        dto.getCnpj_empresa().trim(), tipoDocumento.ordinal()
-                        , pageRequest);
+    private Page<ArquivoProjection> aplicarFiltroComTipoDocEResto(ArquivoFilterDTO dto, TipoDocumento tipoDocumento, PageRequest pageRequest) {
+        return arquivoRepository.buscarArquivosPaginadosFilterComTipoDoc(dto.getNomeEmpresa().trim(), dto.getNumeroAlvara().trim(), dto.getCnpjEmpresa().trim(), tipoDocumento.ordinal(), pageRequest);
     }
 
-    private Page<ArquivoProjection> aplicarFiltroComStatusDocEResto(
-            ArquivoFilterDTO dto, StatusDocumento statusDocumento, PageRequest pageRequest
-    ) {
-        return arquivoRepository
-                .buscarArquivosPaginadosFilterComStatusDoc(
-                        dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
-                        dto.getCnpj_empresa().trim(), statusDocumento.ordinal()
-                        , pageRequest);
+    private Page<ArquivoProjection> aplicarFiltroComStatusDocEResto(ArquivoFilterDTO dto, StatusDocumento statusDocumento, PageRequest pageRequest) {
+        return arquivoRepository.buscarArquivosPaginadosFilterComStatusDoc(dto.getNomeEmpresa().trim(), dto.getNumeroAlvara().trim(), dto.getCnpjEmpresa().trim(), statusDocumento.ordinal(), pageRequest);
     }
 
-    private Page<ArquivoProjection> aplicarFiltroSemTipoDocEStatusDoc(
-            ArquivoFilterDTO dto, PageRequest pageRequest
-    ) {
-        return arquivoRepository
-                .buscarArquivosPaginadosFilterSemTipoDoc(
-                        dto.getNome_empresa().trim(), dto.getNumero_alvara().trim(),
-                        dto.getCnpj_empresa().trim(), pageRequest);
+    private Page<ArquivoProjection> aplicarFiltroSemTipoDocEStatusDoc(ArquivoFilterDTO dto, PageRequest pageRequest) {
+        return arquivoRepository.buscarArquivosPaginadosFilterSemTipoDoc(dto.getNomeEmpresa().trim(), dto.getNumeroAlvara().trim(), dto.getCnpjEmpresa().trim(), pageRequest);
     }
 
     @Override
     public Page<ArquivoProjection> listarVencidos(int page, int size) {
-
-        PageRequest pageRequest = PageRequest.of(
-                page,
-                size,
-                Sort.Direction.ASC,
-                EXPIRA_STR);
-
-        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream()
-                .filter(arquivo -> arquivo.getData_vencimento() != null && arquivo.getExpira() <= 0)
-                .collect(Collectors.toList());
-
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, EXPIRA_STR);
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream().filter(arquivo -> arquivo.getData_vencimento() != null && arquivo.getExpira() <= 0).collect(Collectors.toList());
         return new PageImpl<>(lista, pageRequest, size);
     }
 
     @Override
     public Page<ArquivoProjection> listarVencerEmAte60Dias(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(
-                page,
-                size,
-                Sort.Direction.ASC,
-                EXPIRA_STR);
-
-        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream()
-                .filter(arquivo -> arquivo.getExpira() > 0 && arquivo.getExpira() <= 60)
-                .collect(Collectors.toList());
-
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, EXPIRA_STR);
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream().filter(arquivo -> arquivo.getExpira() > 0 && arquivo.getExpira() <= 60).collect(Collectors.toList());
         return new PageImpl<>(lista, pageRequest, size);
     }
 
     @Override
     public Page<ArquivoProjection> listarDocumentosSemInfo(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(
-                page,
-                size,
-                Sort.Direction.ASC,
-                EXPIRA_STR);
-
-        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream()
-                .filter(arquivo -> arquivo.getData_vencimento() == null)
-                .collect(Collectors.toList());
-
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, EXPIRA_STR);
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream().filter(arquivo -> arquivo.getData_vencimento() == null).collect(Collectors.toList());
         return new PageImpl<>(lista, pageRequest, size);
     }
 
     @Override
     public Page<ArquivoProjection> listarVencerApos60Dias(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(
-                page,
-                size,
-                Sort.Direction.ASC,
-                EXPIRA_STR);
-
-        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream()
-                .filter(arquivo -> arquivo.getExpira() > 60)
-                .collect(Collectors.toList());
-
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, EXPIRA_STR);
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream().filter(arquivo -> arquivo.getExpira() > 60).collect(Collectors.toList());
         return new PageImpl<>(lista, pageRequest, size);
     }
 
     @Override
     public Arquivo buscarrPorId(Integer id) {
-        return arquivoRepository.
-                findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
+        return arquivoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
     }
 
     @Override
     public void atualizarPorId(ArquivoDTO dto) {
-        arquivoRepository.
-                findById(dto.getId())
-                .map(clienteAchado -> {
-                    clienteAchado.setTipoDoc(dto.getTipo_doc());
-                    clienteAchado.setNomeArquivo(dto.getNome_arquivo());
-                    clienteAchado.setNumeroAlvara(dto.getNumero_alvara());
-                    clienteAchado.setNomeEmpresa(dto.getNome_empresa());
-                    clienteAchado.setCnpjEmpresa(dto.getCnpj_empresa());
-                    clienteAchado.setDataEmissao(dto.getData_emissao());
-                    clienteAchado.setDataVencimento(dto.getData_vencimento());
-                    clienteAchado.setObservacao(dto.getObservacao());
-                    clienteAchado.setStatusDocumento(dto.getStatus_documento());
+        arquivoRepository.findById(dto.getId()).map(clienteAchado -> {
+            clienteAchado.setTipoDoc(dto.getTipoDoc());
+            clienteAchado.setNomeArquivo(dto.getNomeArquivo());
+            clienteAchado.setNumeroAlvara(dto.getNumeroAlvara());
+            clienteAchado.setNomeEmpresa(dto.getNomeEmpresa());
+            clienteAchado.setCnpjEmpresa(dto.getCnpjEmpresa());
+            clienteAchado.setDataEmissao(dto.getDataEmissao());
+            clienteAchado.setDataVencimento(dto.getDataVencimento());
+            clienteAchado.setObservacao(dto.getObservacao());
+            clienteAchado.setStatusDocumento(dto.getStatusDocumento());
 
-                    return arquivoRepository.save(clienteAchado);
-                })
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
+            return arquivoRepository.save(clienteAchado);
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
     }
 
 
@@ -263,14 +185,10 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     @Transactional
     public void deletarPorId(Integer id) {
-        arquivoRepository.
-                findById(id)
-                .map(documento -> {
-                    arquivoRepository.delete(documento);
-                    return Void.TYPE;
-                })
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
+        arquivoRepository.findById(id).map(documento -> {
+            arquivoRepository.delete(documento);
+            return Void.TYPE;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ARQUIVO_NOTFOUND));
     }
 
     @Override
@@ -278,12 +196,10 @@ public class ArquivoServiceImpl implements ArquivoService {
         if (!listaDeletar.isEmpty()) {
             for (String id : listaDeletar) {
                 Integer idDeletar = Integer.parseInt(id.trim());
-                arquivoRepository.
-                        findById(idDeletar)
-                        .map(documento -> {
-                            arquivoRepository.delete(documento);
-                            return Void.TYPE;
-                        });
+                arquivoRepository.findById(idDeletar).map(documento -> {
+                    arquivoRepository.delete(documento);
+                    return Void.TYPE;
+                });
             }
         }
     }

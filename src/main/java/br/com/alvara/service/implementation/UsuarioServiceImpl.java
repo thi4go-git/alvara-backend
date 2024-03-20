@@ -2,6 +2,7 @@ package br.com.alvara.service.implementation;
 
 import br.com.alvara.exception.GeralException;
 import br.com.alvara.model.entity.Usuario;
+import br.com.alvara.model.enums.RoleEnum;
 import br.com.alvara.model.repository.UsuarioRepository;
 import br.com.alvara.rest.dto.UsuarioDTO;
 import br.com.alvara.rest.mapper.UsuarioMapper;
@@ -45,17 +46,10 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = repository
-                .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o username informado!"));
+        Usuario usuario = repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o username informado!"));
 
         if (usuario.isAtivo()) {
-            return User
-                    .builder()
-                    .username(usuario.getUsername())
-                    .password(usuario.getPassword())
-                    .roles(usuario.getRole())
-                    .build();
+            return User.builder().username(usuario.getUsername()).password(usuario.getPassword()).roles(usuario.getRole()).build();
         } else {
             throw new GeralException("Usuário está desativado!");
         }
@@ -79,23 +73,17 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
 
     @Override
     public Usuario buscarPorUsuername(String username) {
-        return repository.
-                findByUsername(username)
-                .orElse(new Usuario());
+        return repository.findByUsername(username).orElse(new Usuario());
     }
 
     @Override
     public Usuario buscarPorCpf(String cpf) {
-        return repository.
-                findByCpf(cpf)
-                .orElse(new Usuario());
+        return repository.findByCpf(cpf).orElse(new Usuario());
     }
 
     @Override
     public Page<Usuario> listarTodos(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size,
-                Sort.Direction.ASC,
-                "id");
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "id");
         return repository.findAll(pageRequest);
     }
 
@@ -104,63 +92,49 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
     public byte[] adicionarFoto(Integer idUser, Part arquivo) {
         Optional<Usuario> usuario = repository.findById(idUser);
         return usuario.map(c -> {
-                    try {
-                        InputStream is = arquivo.getInputStream();
-                        byte[] bytes = new byte[(int) arquivo.getSize()];
-                        IOUtils.readFully(is, bytes);
-                        c.setFoto(bytes);
-                        repository.save(c);
-                        is.close();
-                        return bytes;
-                    } catch (IOException ex) {
-                        throw new GeralException("Erro ao converter stream foto para Bytes");
-                    }
-                })
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
+            try {
+                InputStream is = arquivo.getInputStream();
+                byte[] bytes = new byte[(int) arquivo.getSize()];
+                IOUtils.readFully(is, bytes);
+                c.setFoto(bytes);
+                repository.save(c);
+                is.close();
+                return bytes;
+            } catch (IOException ex) {
+                throw new GeralException("Erro ao converter stream foto para Bytes");
+            }
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
     }
 
     @Override
     public void ativarDesativarUsuario(Integer idUser) {
-        repository.
-                findById(idUser)
-                .map(achado -> {
-                    achado.setAtivo(!achado.isAtivo());
-                    repository.save(achado);
-                    return Void.TYPE;
-                })
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
+        repository.findById(idUser).map(achado -> {
+            achado.setAtivo(!achado.isAtivo());
+            repository.save(achado);
+            return Void.TYPE;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
     }
 
     @Override
     public void ativarDesativarUsuarioAdm(Integer id) {
-        repository.
-                findById(id)
-                .map(usuarioAchado -> {
-                    if (usuarioAchado.getRole().equals("ADMIN")) {
-                        usuarioAchado.setRole("USER");
-                    } else {
-                        usuarioAchado.setRole("ADMIN");
-                    }
-                    repository.save(usuarioAchado);
-                    return Void.TYPE;
-                })
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
+        repository.findById(id).map(usuarioAchado -> {
+            if (usuarioAchado.getRole().equals(RoleEnum.ADMIN.name())) {
+                usuarioAchado.setRole(RoleEnum.USER.name());
+            } else {
+                usuarioAchado.setRole(RoleEnum.ADMIN.name());
+            }
+            repository.save(usuarioAchado);
+            return Void.TYPE;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
 
     }
 
     @Override
     public void deletarUsuario(Integer id) {
-        repository.
-                findById(id)
-                .map(cliente -> {
-                    repository.delete(cliente);
-                    return Void.TYPE;
-                })
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
+        repository.findById(id).map(cliente -> {
+            repository.delete(cliente);
+            return Void.TYPE;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, MSG_USER_NOTFOUND));
     }
 
 
