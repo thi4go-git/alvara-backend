@@ -124,7 +124,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     public Page<ArquivoProjection> listarVencidos(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, EXPIRA_STR);
-        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream().filter(arquivo -> arquivo.getData_vencimento() != null && arquivo.getExpira() <= 0).collect(Collectors.toList());
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream().filter(arquivo -> arquivo.getDataVencimento() != null && arquivo.getExpira() <= 0).collect(Collectors.toList());
         return new PageImpl<>(lista, pageRequest, size);
     }
 
@@ -138,7 +138,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     public Page<ArquivoProjection> listarDocumentosSemInfo(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, EXPIRA_STR);
-        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream().filter(arquivo -> arquivo.getData_vencimento() == null).collect(Collectors.toList());
+        List<ArquivoProjection> lista = arquivoRepository.listarTodosList().stream().filter(arquivo -> arquivo.getDataVencimento() == null).collect(Collectors.toList());
         return new PageImpl<>(lista, pageRequest, size);
     }
 

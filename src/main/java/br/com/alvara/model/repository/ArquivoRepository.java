@@ -16,17 +16,18 @@ import java.util.List;
 public interface ArquivoRepository extends JpaRepository<Arquivo, Integer> {
 
     @Query(value = "SELECT  " +
-            "id,tipo_doc,nome_arquivo,numero_alvara,nome_empresa, cnpj_empresa,data_emissao,data_vencimento, " +
-            "(CASE WHEN data_vencimento is null THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) as expira, observacao, status_documento " +
+            "id,tipo_doc as tipoDoc,nome_arquivo as nomeArquivo,numero_alvara as numeroAlvara,nome_empresa as nomeEmpresa, cnpj_empresa as cnpjEmpresa," +
+            "data_emissao as dataEmissao,data_vencimento as dataVencimento," +
+            "(CASE WHEN data_vencimento is null THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) as expira, observacao, status_documento as statusDocumento " +
             "FROM ARQUIVO ", nativeQuery = true)
     List<ArquivoProjection> listarTodosList();
 
 
     @Query(value =
-            "SELECT id, tipo_doc, nome_arquivo, numero_alvara, nome_empresa, " +
-                    "cnpj_empresa, data_emissao, data_vencimento, " +
-                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) " +
-                    "AS expira, observacao, status_documento " +
+            "SELECT id, tipo_doc AS tipoDoc, nome_arquivo as nomeArquivo, numero_alvara AS numeroAlvara, nome_empresa as nomeEmpresa, " +
+                    "cnpj_empresa as cnpjEmpresa, data_emissao as dataEmissao, data_vencimento as dataVencimento, " +
+                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) AS expira, " +
+                    "observacao, status_documento as statusDocumento " +
                     "FROM ARQUIVO " +
                     "WHERE 1=1 " +
                     "AND (:nome IS NULL OR nome_empresa ILIKE %:nome% ) " +
@@ -51,10 +52,10 @@ public interface ArquivoRepository extends JpaRepository<Arquivo, Integer> {
             Pageable pageable);
 
     @Query(value =
-            "SELECT id, tipo_doc, nome_arquivo, numero_alvara, nome_empresa, " +
-                    "cnpj_empresa, data_emissao, data_vencimento, " +
-                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) " +
-                    "AS expira, observacao, status_documento " +
+            "SELECT id, tipo_doc as tipoDoc, nome_arquivo as nomeArquivo, numero_alvara as numeroAlvara, nome_empresa as nomeEmpresa, " +
+                    "cnpj_empresa as cnpjEmpresa, data_emissao as dataEmissao, data_vencimento as dataVencimento, " +
+                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) AS expira, " +
+                    "observacao, status_documento as statusDocumento " +
                     "FROM ARQUIVO " +
                     "WHERE 1=1 " +
                     "AND (:nome IS NULL OR nome_empresa ILIKE %:nome% ) " +
@@ -77,10 +78,10 @@ public interface ArquivoRepository extends JpaRepository<Arquivo, Integer> {
 
 
     @Query(value =
-            "SELECT id, tipo_doc, nome_arquivo, numero_alvara, nome_empresa, " +
-                    "cnpj_empresa, data_emissao, data_vencimento, " +
-                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) " +
-                    "AS expira, observacao, status_documento " +
+            "SELECT id, tipo_doc as tipoDoc, nome_arquivo as nomeArquivo, numero_alvara as numeroAlvara, nome_empresa as nomeEmpresa, " +
+                    "cnpj_empresa as cnpjEmpresa, data_emissao as dataEmissao, data_vencimento as dataVencimento, " +
+                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) AS expira, " +
+                    "observacao, status_documento as statusDocumento " +
                     "FROM ARQUIVO " +
                     "WHERE 1=1 " +
                     "AND (:nome IS NULL OR nome_empresa ILIKE %:nome% ) " +
@@ -102,10 +103,10 @@ public interface ArquivoRepository extends JpaRepository<Arquivo, Integer> {
             Pageable pageable);
 
     @Query(value =
-            "SELECT id, tipo_doc, nome_arquivo, numero_alvara, nome_empresa, " +
-                    "cnpj_empresa, data_emissao, data_vencimento, " +
-                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) " +
-                    "AS expira, observacao, status_documento  " +
+            "SELECT id, tipo_doc AS tipoDoc, nome_arquivo as nomeArquivo, numero_alvara as numeroAlvara, nome_empresa as nomeEmpresa, " +
+                    "cnpj_empresa as cnpjEmpresa, data_emissao as dataEmissao, data_vencimento as dataVencimento, " +
+                    "(CASE WHEN data_vencimento IS NULL THEN 0 ELSE (data_vencimento-CURRENT_DATE) END) AS expira," +
+                    "observacao, status_documento as statusDocumento " +
                     "FROM ARQUIVO " +
                     "WHERE 1=1 " +
                     "AND (:nome IS NULL OR nome_empresa ILIKE %:nome% ) " +

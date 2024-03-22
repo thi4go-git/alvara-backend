@@ -13,16 +13,16 @@ import java.time.LocalDate;
 public class ArquivoProjectionImpl implements ArquivoProjection {
 
     private Long id;
-    private TipoDocumento tipo_doc;
-    private String nome_arquivo;
-    private String numero_alvara;
-    private String nome_empresa;
-    private String cnpj_empresa;
-    private LocalDate data_emissao;
-    private LocalDate data_vencimento;
+    private TipoDocumento tipoDoc;
+    private String nomeArquivo;
+    private String numeroAlvara;
+    private String nomeEmpresa;
+    private String cnpjEmpresa;
+    private LocalDate dataEmissao;
+    private LocalDate dataVencimento;
     private Integer expira;
     private String observacao;
-    private StatusDocumento status_documento;
+    private StatusDocumento statusDocumento;
 
 
     @Override
@@ -31,38 +31,38 @@ public class ArquivoProjectionImpl implements ArquivoProjection {
     }
 
     @Override
-    public TipoDocumento getTipo_doc() {
-        return tipo_doc;
+    public TipoDocumento getTipoDoc() {
+        return tipoDoc;
     }
 
     @Override
-    public String getNome_arquivo() {
-        return nome_arquivo;
+    public String getNomeArquivo() {
+        return nomeArquivo;
     }
 
     @Override
-    public String getNumero_alvara() {
-        return numero_alvara;
+    public String getNumeroAlvara() {
+        return numeroAlvara;
     }
 
     @Override
-    public String getNome_empresa() {
-        return nome_empresa;
+    public String getNomeEmpresa() {
+        return nomeEmpresa;
     }
 
     @Override
-    public String getCnpj_empresa() {
-        return cnpj_empresa;
+    public String getCnpjEmpresa() {
+        return cnpjEmpresa;
     }
 
     @Override
-    public LocalDate getData_emissao() {
-        return data_emissao;
+    public LocalDate getDataEmissao() {
+        return dataEmissao;
     }
 
     @Override
-    public LocalDate getData_vencimento() {
-        return data_vencimento;
+    public LocalDate getDataVencimento() {
+        return dataVencimento;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ArquivoProjectionImpl implements ArquivoProjection {
     }
 
     @Override
-    public StatusDocumento getStatus_documento() {
-        return status_documento;
+    public StatusDocumento getStatusDocumento() {
+        return statusDocumento;
     }
 }
