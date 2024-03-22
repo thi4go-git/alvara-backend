@@ -20,9 +20,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Value("${security.jwt.signing-key}")
     private String chaveAssinatura;
-
     @Value("${security.jwt.expiration_token_minutes}")
     private String expira;
+
+    @Value("${security.jwt.client_id}")
+    private String clientId;
+
+    @Value("${security.jwt.client_secret}")
+    private String clientSecret;
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
@@ -56,11 +61,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         clients
                 .inMemory()
-                .withClient("my-angular-app")
-                .secret("@321")
-                .scopes("read", "write")//ANGULAR tem permissão de leitura e escrita
+                .withClient(clientId)
+                .secret(clientSecret)
+                .scopes("read", "write")
                 .authorizedGrantTypes("password")
-                .accessTokenValiditySeconds(expiraToken); //(em segundos) token vale por 30 minutos
+                .accessTokenValiditySeconds(expiraToken);
     }
 
 

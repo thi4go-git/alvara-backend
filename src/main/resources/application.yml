@@ -16,3 +16,5 @@ security:
   jwt:
     signing-key: cm9uYWxkaW5obw==
     expiration_token_minutes: 30
+    client_id: my-angular-app
+    client_secret: '@321'

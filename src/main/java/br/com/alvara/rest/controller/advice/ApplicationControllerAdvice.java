@@ -1,6 +1,7 @@
 package br.com.alvara.rest.controller.advice;
 
 import br.com.alvara.exception.ApiErrors;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -22,7 +23,7 @@ public class ApplicationControllerAdvice {
         BindingResult bindingResult = ex.getBindingResult();
         List<String> messages = bindingResult.getAllErrors()
                 .stream()
-                .map(objectError -> objectError.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
         return new ApiErrors(messages);
     }
