@@ -15,18 +15,9 @@ public class DevelopmentConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(DevelopmentConfig.class);
 
-    @Value("${spring.application.name}")
-    private String appName;
-
-    @Autowired
-    private UsuarioServiceImpl usuarioService;
-
     @Bean
     public CommandLineRunner executar() {
-        return args -> {
-            LOG.info(":::" + appName + ":::");
-            LOG.info("::: EXECUTANDO AMBIENTE DE DESENVOLVIMENTO :::");
-        };
+        return args -> LOG.info("::: EXECUTANDO AMBIENTE DE DESENVOLVIMENTO :::");
     }
 
 

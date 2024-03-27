@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: production
+    active: local
   application:
     name: Sistema de Alvarás WEB
   servlet:

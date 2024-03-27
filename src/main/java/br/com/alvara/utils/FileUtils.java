@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+
 @Component
 public abstract class FileUtils {
 
@@ -24,41 +25,36 @@ public abstract class FileUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileUtils.class);
 
-    public static Arquivo converterPdfParaAquivo(Part arquivoPart) {
+    public static Arquivo convertPartToArquivo(Part arquivoPart) {
         Pdf pdf = new Pdf();
-        InputStream is = null;
-        try {
-            is = arquivoPart.getInputStream();
+        try (InputStream is = arquivoPart.getInputStream()) {
             byte[] bytes = new byte[(int) arquivoPart.getSize()];
             IOUtils.readFully(is, bytes);
 
             File arqPdf = byteTofile(bytes, arquivoPart.getSubmittedFileName());
             Arquivo arquivoObtido = pdf.lerPdf(arqPdf, bytes);
 
-            if (arqPdf.exists()) {
-                Path pdfPath = arqPdf.toPath();
-                try {
-                    Files.delete(pdfPath);
-                    LOG.info("Arquivo excluído com sucesso.");
-                } catch (IOException e) {
-                    LOG.error("Falha ao excluir o arquivo. " + e.getMessage());
-                }
+            if (arqPdf != null && arqPdf.exists()) {
+                excluirArquivoFisico(arqPdf);
             }
-
-            is.close();
 
             return arquivoObtido;
 
         } catch (IOException e) {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                LOG.error("Erro método partToArquivo " + ex.getCause());
-            }
+            LOG.error(String.format("Erro no método converterPdfParaArquivo. %s", e.getMessage()));
         }
         return null;
     }
 
+    private static void excluirArquivoFisico(File arqPdf) {
+        Path pdfPath = arqPdf.toPath();
+        try {
+            Files.delete(pdfPath);
+            LOG.info("Arquivo excluído com sucesso.");
+        } catch (IOException e) {
+            LOG.error(String.format("Falha ao excluir o arquivo. %s", e.getMessage()));
+        }
+    }
 
     private static File byteTofile(byte[] bytesArquivo, String nome) {
         File pdfExistente = new File(nome);
@@ -68,15 +64,14 @@ public abstract class FileUtils {
                 Files.delete(pdfPath);
                 LOG.info("Arquivo excluído com sucesso.");
             } catch (IOException e) {
-                LOG.error("Falha ao excluir o arquivo {}");
+                LOG.error("Falha ao excluir o arquivo.");
             }
         }
         File file;
         try {
-            byte[] bytes = bytesArquivo;
             file = new File(nome);
             try (FileOutputStream fos = new FileOutputStream(file)) {
-                fos.write(bytes);
+                fos.write(bytesArquivo);
             }
             return file;
         } catch (IOException e) {

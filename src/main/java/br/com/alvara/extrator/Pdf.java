@@ -32,8 +32,8 @@ public class Pdf {
     private static final String TAG_LIC_AMBIENTAL = "CONCEDE A LICENÇA AMBIENTAL DECLARATÓRIA A";
     private static final String TAG_RISCO_NOME = "DE RISCONOME FANTASIA";
     private static final String TAG_DE = "DE";
-    private static final String SEPARADOR_COLCHETE_BARRA = "[/]";
-    private static final String SEPARADOR_COLCHETE_VIRGULA = "[,]";
+    private static final String SEPARADOR_COLCHETE_BARRA = "/";
+    private static final String SEPARADOR_COLCHETE_VIRGULA = ",";
 
 
     public Arquivo lerPdf(File pdf, byte[] bytes) {

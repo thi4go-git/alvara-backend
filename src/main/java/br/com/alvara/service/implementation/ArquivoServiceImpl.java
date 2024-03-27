@@ -37,7 +37,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     @Transactional
     public Arquivo salvarArquivo(Part arquivoNovo) {
-        Arquivo novo = FileUtils.converterPdfParaAquivo(arquivoNovo);
+        Arquivo novo = FileUtils.convertPartToArquivo(arquivoNovo);
         if (novo != null) {
             return arquivoRepository.save(novo);
         } else {
@@ -48,7 +48,7 @@ public class ArquivoServiceImpl implements ArquivoService {
     @Override
     @Transactional
     public void atualizarPdf(Part pdfUpdate, Integer id) {
-        Arquivo novo = FileUtils.converterPdfParaAquivo(pdfUpdate);
+        Arquivo novo = FileUtils.convertPartToArquivo(pdfUpdate);
         if (novo != null) {
             arquivoRepository.findById(id).map(achado -> {
 
