@@ -2,8 +2,10 @@ package br.com.alvara.configuration;
 
 
 import br.com.alvara.service.implementation.UsuarioServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,25 +16,25 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Profile("production")
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UsuarioServiceImpl usuarioService;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(usuarioService)
-                .passwordEncoder(passwordEncoder());
-
+                .passwordEncoder(passwordEncoder);
     }
 
     @Bean

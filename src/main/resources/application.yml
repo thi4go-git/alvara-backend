@@ -7,14 +7,3 @@ spring:
     multipart:
       max-file-size: -1
       max-request-size: -1
-  security:
-    enabled: ${spring.profiles.active != 'test'}
-security:
-  oauth2:
-    client:
-      scope: password
-  jwt:
-    signing-key: cm9uYWxkaW5obw==
-    expiration_token_minutes: 30
-    client_id: my-angular-app
-    client_secret: '@321'
