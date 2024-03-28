@@ -3,6 +3,7 @@ package br.com.alvara.rest.dto;
 import br.com.alvara.anottation.CPFunico;
 import br.com.alvara.anottation.UserUnico;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
@@ -13,6 +14,7 @@ import javax.validation.constraints.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UsuarioDTO {
 
     @NotBlank(message = "{campo.username.obrigatorio}")

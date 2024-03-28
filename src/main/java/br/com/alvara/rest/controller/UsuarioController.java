@@ -40,6 +40,7 @@ public class UsuarioController {
     @Operation(summary = "Criar Usuário", description = "Este endpoint Cria um Usuário.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuário criado!"),
+            @ApiResponse(responseCode = "400", description = "Bad request 400"),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<UsuarioResponseDTO> salvar(
