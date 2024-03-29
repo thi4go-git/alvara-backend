@@ -11,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,8 +36,9 @@ class UsuarioControllerTest {
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(UsuarioControllerTest.class);
-
     private static final String URL_PATH = "/api/usuarios";
+    private static final String ID_USUARIO = "1";
+    private static final String NOME_FOTO_MOCK = "foto";
 
     @Test
     @DisplayName("Deve salvar Usuario com Sucesso!")
@@ -49,10 +54,10 @@ class UsuarioControllerTest {
                 .extract()
                 .response();
         String responseBody = resposta.getBody().asString();
-        LOG.info("RESPONSE => ".concat(responseBody));
+        LOG.info(responseBody);
         assertNotNull(responseBody);
         assertEquals(HttpStatus.SC_CREATED, resposta.statusCode());
-        assertEquals("1", resposta.jsonPath().getString("id"));
+        assertEquals(ID_USUARIO, resposta.jsonPath().getString("id"));
         assertEquals(dto.getUsername(), resposta.jsonPath().getString("username"));
         assertEquals(dto.getPassword(), resposta.jsonPath().getString("password"));
         assertEquals("USER", resposta.jsonPath().getString("role"));
@@ -77,7 +82,7 @@ class UsuarioControllerTest {
                 .extract()
                 .response();
         String responseBody = resposta.getBody().asString();
-        LOG.info("RESPONSE => ".concat(responseBody));
+        LOG.info(responseBody);
         assertNotNull(responseBody);
         assertEquals(HttpStatus.SC_BAD_REQUEST, resposta.statusCode());
         assertTrue(responseBody.contains("Já existe um Usuário cadastrado com o CPF informado"));
@@ -98,7 +103,7 @@ class UsuarioControllerTest {
                 .extract()
                 .response();
         String responseBody = resposta.getBody().asString();
-        LOG.info("RESPONSE => ".concat(responseBody));
+        LOG.info(responseBody);
         assertNotNull(responseBody);
         assertEquals(HttpStatus.SC_BAD_REQUEST, resposta.statusCode());
         assertTrue(responseBody.contains("O campo cpf é Obrigatório!"));
@@ -119,7 +124,7 @@ class UsuarioControllerTest {
                 .extract()
                 .response();
         String responseBody = resposta.getBody().asString();
-        LOG.info("RESPONSE => ".concat(responseBody));
+        LOG.info(responseBody);
         assertNotNull(responseBody);
         assertEquals(HttpStatus.SC_OK, resposta.statusCode());
         assertTrue(responseBody.contains("\"empty\":false"));
@@ -143,7 +148,7 @@ class UsuarioControllerTest {
                 .extract()
                 .response();
         String responseBody = resposta.getBody().asString();
-        LOG.info("RESPONSE => ".concat(responseBody));
+        LOG.info(responseBody);
         assertNotNull(responseBody);
         assertEquals(HttpStatus.SC_OK, resposta.statusCode());
         assertTrue(responseBody.contains("\"empty\":false"));
@@ -151,6 +156,50 @@ class UsuarioControllerTest {
         assertTrue(responseBody.contains("\"pageSize\":20"));
         assertTrue(responseBody.contains("\"totalElements\":1"));
         assertTrue(responseBody.contains("\"numberOfElements\":0"));
+    }
+
+    @Test
+    @DisplayName("Deve adicionar foto ao usuário")
+    @Order(6)
+    void deveAdicionarFotoAoUsuario() {
+        byte[] conteudoFotoMock = "Conteúdo da foto para gerar bytes mock teste".getBytes();
+        InputStream inputStream = new ByteArrayInputStream(conteudoFotoMock);
+        var resposta = given()
+                .multiPart(NOME_FOTO_MOCK, "foto.jpg", inputStream)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .when()
+                .put(URL_PATH.concat("/" + ID_USUARIO + "/adicionar-foto"))
+                .then()
+                .extract()
+                .response();
+        String responseBody = resposta.getBody().asString();
+        assertNotNull(responseBody);
+        assertEquals(HttpStatus.SC_OK, resposta.statusCode());
+        byte[] byteFoto = resposta.asByteArray();
+        assertTrue(byteFoto.length > 0);
+        LOG.info(responseBody);
+        LOG.info("Tamanho do array de bytes FOTO: " + byteFoto.length);
+    }
+
+    @Test
+    @DisplayName("Não Deve adicionar foto ao usuário inexistente")
+    @Order(7)
+    void naoDeveAdicionarFotoAoUsuario() {
+        byte[] conteudoFotoMock = "FOTO teste para gerar bytes mock".getBytes();
+        InputStream inputStream = new ByteArrayInputStream(conteudoFotoMock);
+        var resposta = given()
+                .multiPart(NOME_FOTO_MOCK, "fototeste.jpg", inputStream)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .when()
+                .put(URL_PATH.concat("/4/adicionar-foto"))
+                .then()
+                .extract()
+                .response();
+        String responseBody = resposta.getBody().asString();
+        LOG.info(responseBody);
+        assertNotNull(responseBody);
+        assertEquals(HttpStatus.SC_NOT_FOUND, resposta.statusCode());
+        assertTrue(responseBody.contains("Usuário não encontrado com o ID informado!"));
     }
 
     private UsuarioDTO gerarUsuarioDTO() {
