@@ -50,7 +50,7 @@ class UsuarioControllerTest {
 
     @ParameterizedTest
     @MethodSource("usuariosParaTeste")
-    @DisplayName("Testa Cadastro de usuários")
+    @DisplayName("Testar Cadastro de usuários")
     @Order(1)
     void testarCadastroDeUsuarios(UsuarioDTO dto, int indexUsuario) {
         var resposta = given()
@@ -87,6 +87,7 @@ class UsuarioControllerTest {
             assertTrue(responseBody.contains("O campo password é Obrigatório!"));
             assertTrue(responseBody.contains("O campo cpf é Obrigatório!"));
         } else {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, resposta.statusCode());
             assertTrue(responseBody.contains("O campo cpf é invalido!"));
         }
     }
@@ -139,7 +140,7 @@ class UsuarioControllerTest {
 
     @ParameterizedTest
     @CsvSource({ID_USUARIO, ID_USUARIO_INEXISTENTE})
-    @DisplayName("Testa cadastro de foto do usuário")
+    @DisplayName("Testar cadastro de foto do usuário")
     @Order(4)
     void testarCadastroDeFoto(String userId) {
         byte[] conteudoFotoMock = "FOTO teste para gerar bytes mock".getBytes();
@@ -171,7 +172,7 @@ class UsuarioControllerTest {
 
     @ParameterizedTest
     @CsvSource({ID_USUARIO, ID_USUARIO_INEXISTENTE})
-    @DisplayName("Testa ativação do usuário")
+    @DisplayName("Testar ativação do usuário")
     @Order(5)
     void testarAtivarDesativarUsuario(String userId) {
         var resposta = given()
@@ -184,7 +185,54 @@ class UsuarioControllerTest {
         String responseBody = resposta.getBody().asString();
         assertNotNull(responseBody);
         if (userId.equals(ID_USUARIO_INEXISTENTE)) {
+            assertEquals(HttpStatus.SC_NOT_FOUND, resposta.statusCode());
             assertTrue(responseBody.contains(MSG_USER_NOTFOUND));
+        } else {
+            assertEquals(HttpStatus.SC_OK, resposta.statusCode());
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({ID_USUARIO, ID_USUARIO_INEXISTENTE})
+    @DisplayName("Testar ativação do usuário ADMINISTRADOR")
+    @Order(6)
+    void testarAtivarDesativarUsuarioAdministrador(String userId) {
+        var resposta = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .patch(URL_PATH.concat("/ativardesativaradm/" + userId))
+                .then()
+                .extract()
+                .response();
+        String responseBody = resposta.getBody().asString();
+        assertNotNull(responseBody);
+        if (userId.equals(ID_USUARIO_INEXISTENTE)) {
+            assertEquals(HttpStatus.SC_NOT_FOUND, resposta.statusCode());
+            assertTrue(responseBody.contains(MSG_USER_NOTFOUND));
+        } else {
+            assertEquals(HttpStatus.SC_OK, resposta.statusCode());
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({ID_USUARIO_INEXISTENTE, ID_USUARIO})
+    @DisplayName("Testar exclusão do usuário")
+    @Order(7)
+    void testarExclusaoUsuario(String userId) {
+        var resposta = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete(URL_PATH.concat("/delete/" + userId))
+                .then()
+                .extract()
+                .response();
+        String responseBody = resposta.getBody().asString();
+        assertNotNull(responseBody);
+        if (userId.equals(ID_USUARIO_INEXISTENTE)) {
+            assertEquals(HttpStatus.SC_NOT_FOUND, resposta.statusCode());
+            assertTrue(responseBody.contains(MSG_USER_NOTFOUND));
+        } else {
+            assertEquals(HttpStatus.SC_NO_CONTENT, resposta.statusCode());
         }
     }
 
