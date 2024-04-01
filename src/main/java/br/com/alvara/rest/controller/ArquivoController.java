@@ -33,12 +33,10 @@ public class ArquivoController {
 
     private static final String CAMPO_ID_OBRIGATORIO = "O campo id é obrigatório!";
     private static final String SERVER_ERROR = "Erro interno do servidor!";
-
     private static final String ARQUIVO_NOTFOUND = "Arquivo não localizado!";
 
     @Autowired
     private ArquivoServiceImpl arquivoService;
-
     @Autowired
     private ArquivoMapper arquivoMapper;
 
