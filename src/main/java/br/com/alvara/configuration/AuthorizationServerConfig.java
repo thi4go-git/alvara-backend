@@ -22,6 +22,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Value("${security.jwt.signing-key}")
     private String chaveAssinatura;
+    
     @Value("${security.jwt.expiration_token_minutes}")
     private String expira;
 

@@ -7,3 +7,6 @@ spring:
     multipart:
       max-file-size: -1
       max-request-size: -1
+  info:
+    app:
+      version: 13/06/2024

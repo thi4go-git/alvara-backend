@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
+    @Value("${spring.info.app.version}")
+    private String versaoSistema;
+
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -20,7 +23,7 @@ public class OpenApiConfig {
                                 .email("thi4go19@gmail.com")
                                 .url("https://www.linkedin.com/in/thiago-amorim-melo/")
                         )
-                        .version("19/03/2024"));
+                        .version(versaoSistema));
     }
 
 }
