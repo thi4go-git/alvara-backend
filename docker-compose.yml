@@ -10,7 +10,7 @@ services:
                 - JAR_FILE=target/alvara-backend-1.0.jar
                 - CONTEXT=alvara-backend
         ports:
-            - 8002:8080
+            - 8090:8080
         restart: always
         environment:
             SPRING_DATASOURCE_URL: jdbc:postgresql://cloudtecnologia.dynns.com:5432/alvara
