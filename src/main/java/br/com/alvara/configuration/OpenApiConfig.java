@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class OpenApiConfig {
@@ -16,14 +17,15 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API de Alvarás WEB")
+                        .title("API de Alvarás WEB -")
                         .description("API Para manipular Alvarás")
                         .contact(new Contact()
                                 .name("Thiago Junior")
                                 .email("thi4go19@gmail.com")
                                 .url("https://www.linkedin.com/in/thiago-amorim-melo/")
                         )
-                        .version(versaoSistema));
+                        .version(versaoSistema)
+        );
     }
 
 }

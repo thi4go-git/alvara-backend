@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/alvara
+    url: jdbc:postgresql://127.0.0.1:5431/alvara
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: alvaraWebSenha@2000
