@@ -1,6 +1,19 @@
 version: "3"
 
 services:
+  banco-alvara:
+    container_name: BANCO_ALVARA
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: alvara
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: alvaraWebSenha@2000
+    ports:
+      - "5430:5432"
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      
   alvara-backend:
     container_name: ALVARA_BACKEND
     image: thiadocker/alvara-backend:latest    
@@ -8,17 +21,27 @@ services:
       - "8090:8080"
     restart: always     
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://cloudtecnologia.dynns.com:5432/alvara
+      SPRING_DATASOURCE_URL: jdbc:postgresql://banco-alvara:5432/alvara
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 895674
-      SPRING_JPA_DATABASE-PLATFORM: org.hibernate.dialect.PostgreSQLDialect 
+      SPRING_DATASOURCE_PASSWORD: alvaraWebSenha@2000
+      SPRING_JPA_DATABASE-PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_HIBERNATE_FORMAT-SQL: "true"
+      SPRING_HIBERNATE_SHOW-SQL: "false"
+      SPRING_HIBERNATE_DDL-AUTO: update
+    depends_on:
+      - banco-alvara
+      
   alvara-frontend:
     container_name: ALVARA_FRONTEND
-    image: thiadocker/alvara-frontend:latest  
+    image: thiadocker/alvara-frontend:localhost  
     ports:
-      - 3001:80
+      - 4000:80
     restart: always
     depends_on:
       - alvara-backend
     environment:
-      API_URL: http://cloudtecnologia.dynns.com:8090
+      apiUrl: http://localhost:8090
+      cliente: Contabilidade TEste 2024 LTDA
+      
+volumes:
+  postgres-data:
