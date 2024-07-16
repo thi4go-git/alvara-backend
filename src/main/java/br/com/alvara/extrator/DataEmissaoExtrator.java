@@ -1,0 +1,178 @@
+package br.com.alvara.extrator;
+
+import br.com.alvara.model.enums.TipoDocumento;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
+
+
+import static br.com.alvara.utils.DataUtils.retornarMes;
+
+public abstract class DataEmissaoExtrator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DataEmissaoExtrator.class);
+    private static final String SEPARADOR_COLCHETE_BARRA = "/";
+    private static final String SEPARADOR_COLCHETE_VIRGULA = ",";
+    private static final String TAG_DE = "DE";
+
+    public static LocalDate retornarDataEmissao(final String txt) {
+        try {
+            String tagIni = "ESTE DOCUMENTO FOI EMITIDO EM";
+            String tagFim = "SE IMPRESSO,";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .replace(TAG_DE, "/")
+                    .trim();
+            String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
+            String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_1 :::");
+        }
+
+        try {
+            String tagIni = "DATA DA EXPEDIÇÃO: ";
+            String tagFim = "DATA DE VALIDADE:";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .replace(TAG_DE, "/")
+                    .trim();
+            String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
+            String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_2 :::");
+        }
+
+        try {
+            String tagIni = "ESTE DOCUMENTO FOI EMITIDO EM ";
+            String tagFim = "SE IMPRESSO";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .replace(TAG_DE, "/")
+                    .trim();
+            String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
+            String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_3 :::");
+        }
+
+        try {
+            String tagIni = "BOMBEIRO MILITARAPARECIDA DE GOIÂNIA, ";
+            String tagFim = ".";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .replace(TAG_DE, "/")
+                    .trim();
+            String[] objData = dataStr.split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_4 :::");
+        }
+
+        try {
+            String tagIni = "EMISSÃO: ";
+            int ini = txt.indexOf(tagIni) + 9;
+            String dataStr = txt.substring(ini, ini + 10)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .trim();
+            String[] objData = dataStr.split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_4 :::");
+        }
+
+        try {
+            String tagFim = "SERVIÇO PROFISSIONAL";
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(fim - 10, fim)
+                    .replace(" ", "")
+                    .trim();
+            String[] objData = dataStr.split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_4 :::");
+        }
+
+        try {
+            String tagIni = "ESTE DOCUMENTO FOI EMITIDO EM ";
+            String tagFim = "SE IMPRESSO";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .replace(TAG_DE, "/")
+                    .replace("/ZEMBRO", "DEZEMBRO")
+                    .trim();
+            String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
+            String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_3 :::");
+        }
+
+        try {
+            String tagIni = "LOCAL E DATA: APARECIDA DE GOIÂNIA, ";
+            String tagFim = "VALIDADE: ";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .replace(TAG_DE, "/")
+                    .replace("/ZEMBRO", "DEZEMBRO")
+                    .trim();
+            String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
+            String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_3 :::");
+        }
+
+        return null;
+    }
+}
