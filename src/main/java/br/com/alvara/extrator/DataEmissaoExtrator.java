@@ -1,6 +1,5 @@
 package br.com.alvara.extrator;
 
-import br.com.alvara.model.enums.TipoDocumento;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +14,10 @@ public abstract class DataEmissaoExtrator {
     private static final String SEPARADOR_COLCHETE_BARRA = "/";
     private static final String SEPARADOR_COLCHETE_VIRGULA = ",";
     private static final String TAG_DE = "DE";
+    private static final String DOCUMENTO_EMITIDO_EM = "ESTE DOCUMENTO FOI EMITIDO EM ";
+    private static final String DEZEMBRO = "DEZEMBRO";
+    private static final String SE_IMPRESSO = "SE IMPRESSO";
+    private static final String BARRA_ZEMBRO = "/ZEMBRO";
 
     public static LocalDate retornarDataEmissao(final String txt) {
         try {
@@ -59,10 +62,9 @@ public abstract class DataEmissaoExtrator {
         }
 
         try {
-            String tagIni = "ESTE DOCUMENTO FOI EMITIDO EM ";
-            String tagFim = "SE IMPRESSO";
+            String tagIni = DOCUMENTO_EMITIDO_EM;
             int ini = txt.indexOf(tagIni);
-            int fim = txt.indexOf(tagFim);
+            int fim = txt.indexOf(SE_IMPRESSO);
             String dataStr = txt.substring(ini, fim)
                     .replace(tagIni, "")
                     .replace(" ", "")
@@ -111,7 +113,7 @@ public abstract class DataEmissaoExtrator {
             int ano = Integer.parseInt(objData[2]);
             return LocalDate.of(ano, mes, dia);
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter DATA_EMISSAO_4 :::");
+            LOG.error("::: Erro ao obter DATA_EMISSAO_5 :::");
         }
 
         try {
@@ -126,19 +128,18 @@ public abstract class DataEmissaoExtrator {
             int ano = Integer.parseInt(objData[2]);
             return LocalDate.of(ano, mes, dia);
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter DATA_EMISSAO_4 :::");
+            LOG.error("::: Erro ao obter DATA_EMISSAO_6 :::");
         }
 
         try {
-            String tagIni = "ESTE DOCUMENTO FOI EMITIDO EM ";
-            String tagFim = "SE IMPRESSO";
+            String tagIni = DOCUMENTO_EMITIDO_EM;
             int ini = txt.indexOf(tagIni);
-            int fim = txt.indexOf(tagFim);
+            int fim = txt.indexOf(SE_IMPRESSO);
             String dataStr = txt.substring(ini, fim)
                     .replace(tagIni, "")
                     .replace(" ", "")
                     .replace(TAG_DE, "/")
-                    .replace("/ZEMBRO", "DEZEMBRO")
+                    .replace(BARRA_ZEMBRO, DEZEMBRO)
                     .trim();
             String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
             String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
@@ -148,7 +149,7 @@ public abstract class DataEmissaoExtrator {
 
             return LocalDate.of(ano, mes, dia);
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter DATA_EMISSAO_3 :::");
+            LOG.error("::: Erro ao obter DATA_EMISSAO_7 :::");
         }
 
         try {
@@ -160,7 +161,7 @@ public abstract class DataEmissaoExtrator {
                     .replace(tagIni, "")
                     .replace(" ", "")
                     .replace(TAG_DE, "/")
-                    .replace("/ZEMBRO", "DEZEMBRO")
+                    .replace(BARRA_ZEMBRO, DEZEMBRO)
                     .trim();
             String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
             String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
@@ -170,7 +171,7 @@ public abstract class DataEmissaoExtrator {
 
             return LocalDate.of(ano, mes, dia);
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter DATA_EMISSAO_3 :::");
+            LOG.error("::: Erro ao obter DATA_EMISSAO_8 :::");
         }
 
         return null;

@@ -13,6 +13,9 @@ public class DataVencimentoExtrator {
     private static final String TAG_DE = "DE";
     private static final String SEPARADOR_COLCHETE_BARRA = "/";
     private static final String SEPARADOR_COLCHETE_VIRGULA = ",";
+    private static final String VENCIMENTO = "VENCIMENTO:";
+    private static final String DEZEMBRO = "DEZEMBRO";
+    private static final String BARRA_ZEMBRO = "/ZEMBRO";
 
     public static LocalDate retornarDataVencimento(String txt, TipoDocumento ticpoDoc,
                                                    LocalDate dataEmissao) {
@@ -24,11 +27,10 @@ public class DataVencimentoExtrator {
         }
 
         try {
-            String tagIni = "VENCIMENTO:";
-            int ini = txt.indexOf(tagIni);
+            int ini = txt.indexOf(VENCIMENTO);
             int fim = txt.indexOf("OBSERVAÇÃO CCP:");
             String dataStr = txt.substring(ini, fim)
-                    .replace(tagIni, "")
+                    .replace(VENCIMENTO, "")
                     .replace(" ", "")
                     .replace(TAG_DE, "/")
                     .trim();
@@ -82,7 +84,7 @@ public class DataVencimentoExtrator {
         }
 
         try {
-            String tagIni = "VENCIMENTO:";
+            String tagIni = VENCIMENTO;
             String tagFim = "OBSERVAÇÃO CCP";
             int ini = txt.indexOf(tagIni);
             int fim = txt.indexOf(tagFim);
@@ -90,7 +92,7 @@ public class DataVencimentoExtrator {
                     .replace(tagIni, "")
                     .replace(" ", "")
                     .replace(TAG_DE, "/")
-                    .replace("/ZEMBRO", "DEZEMBRO")
+                    .replace(BARRA_ZEMBRO, DEZEMBRO)
                     .trim();
             String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
             String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
@@ -100,11 +102,11 @@ public class DataVencimentoExtrator {
 
             return LocalDate.of(ano, mes, dia);
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter DATA_VENCIMENTO_3 :::");
+            LOG.error("::: Erro ao obter DATA_VENCIMENTO_4 :::");
         }
 
         try {
-            String tagIni = "VENCIMENTO:";
+            String tagIni = VENCIMENTO;
             String tagFim = "OBSERVAÇÃOCCP";
             int ini = txt.indexOf(tagIni);
             int fim = txt.indexOf(tagFim);
@@ -112,7 +114,7 @@ public class DataVencimentoExtrator {
                     .replace(tagIni, "")
                     .replace(" ", "")
                     .replace(TAG_DE, "/")
-                    .replace("/ZEMBRO", "DEZEMBRO")
+                    .replace(BARRA_ZEMBRO, DEZEMBRO)
                     .trim();
             String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
             String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
@@ -122,7 +124,7 @@ public class DataVencimentoExtrator {
 
             return LocalDate.of(ano, mes, dia);
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter DATA_VENCIMENTO_3 :::");
+            LOG.error("::: Erro ao obter DATA_VENCIMENTO_5 :::");
         }
 
         try {
@@ -134,7 +136,7 @@ public class DataVencimentoExtrator {
                     .replace(tagIni, "")
                     .replace(" ", "")
                     .replace(TAG_DE, "/")
-                    .replace("/ZEMBRO", "DEZEMBRO")
+                    .replace(BARRA_ZEMBRO, DEZEMBRO)
                     .trim();
             String[] obj = dataStr.split(SEPARADOR_COLCHETE_VIRGULA, -1);
             String[] objData = obj[1].split(SEPARADOR_COLCHETE_BARRA, -1);
@@ -144,7 +146,7 @@ public class DataVencimentoExtrator {
 
             return LocalDate.of(ano, mes, dia);
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter DATA_VENCIMENTO_3 :::");
+            LOG.error("::: Erro ao obter DATA_VENCIMENTO_6 :::");
         }
 
         return null;

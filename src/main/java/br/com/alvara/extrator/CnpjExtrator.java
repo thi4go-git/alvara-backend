@@ -41,7 +41,7 @@ public abstract class CnpjExtrator {
                 return cnpj;
             }
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_3 :::");
+            LOG.error("::: Erro ao obter CNPJ_2 :::");
         }
 
         try {
@@ -57,7 +57,7 @@ public abstract class CnpjExtrator {
                 return cnpj;
             }
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_4 :::");
+            LOG.error("::: Erro ao obter CNPJ_3 :::");
         }
 
         try {
@@ -70,7 +70,7 @@ public abstract class CnpjExtrator {
                 return cnpj;
             }
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_5 :::");
+            LOG.error("::: Erro ao obter CNPJ_4 :::");
         }
 
         try {
@@ -83,7 +83,7 @@ public abstract class CnpjExtrator {
                 return cnpj;
             }
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_2 :::");
+            LOG.error("::: Erro ao obter CNPJ_5 :::");
         }
 
         return "00000000000000";
