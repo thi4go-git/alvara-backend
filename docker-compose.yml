@@ -13,7 +13,7 @@ services:
             - 8090:8080
         restart: always
         environment:
-            SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/alvara
+            SPRING_DATASOURCE_URL: jdbc:postgresql://cloudtecnologia.dynns.com:5432/alvara-hml
             SPRING_DATASOURCE_USERNAME: postgres
             SPRING_DATASOURCE_PASSWORD: 895674
             SPRING_JPA_DATABASE-PLATFORM: org.hibernate.dialect.PostgreSQLDialect
