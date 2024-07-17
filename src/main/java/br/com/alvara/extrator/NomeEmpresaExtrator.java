@@ -18,7 +18,7 @@ public abstract class NomeEmpresaExtrator {
             int fim = txt.indexOf(INDEX_CNPJ);
             return txt.substring(ini, fim).replace(tagIni, "").trim();
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_1 :::");
+            LOG.error("::: Erro ao obter NOME_EMPRESA_1 :::");
         }
 
         try {
@@ -27,7 +27,7 @@ public abstract class NomeEmpresaExtrator {
             int fim = txt.indexOf(INDEX_CNPJ);
             return txt.substring(ini, fim).replace(tagIni, "");
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_2 :::");
+            LOG.error("::: Erro ao obter NOME_EMPRESA_2 :::");
         }
 
         try {
@@ -38,7 +38,7 @@ public abstract class NomeEmpresaExtrator {
             return txt.substring(ini, fim).replace(tagIni
                     , "");
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_3 :::");
+            LOG.error("::: Erro ao obter NOME_EMPRESA_3 :::");
         }
 
         try {
@@ -49,7 +49,7 @@ public abstract class NomeEmpresaExtrator {
             return txt.substring(ini, fim).replace(tagIni
                     , "");
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_4 :::");
+            LOG.error("::: Erro ao obter NOME_EMPRESA_4 :::");
         }
 
         try {
@@ -59,7 +59,7 @@ public abstract class NomeEmpresaExtrator {
             return txt.substring(ini, fim)
                     .trim();
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_5 :::");
+            LOG.error("::: Erro ao obter NOME_EMPRESA_5 :::");
         }
 
         try {
@@ -71,9 +71,21 @@ public abstract class NomeEmpresaExtrator {
                     .replace(tagIni, "")
                     .trim();
         } catch (Exception e) {
-            LOG.error("::: Erro ao obter CNPJ_6 :::");
+            LOG.error("::: Erro ao obter NOME_EMPRESA_6 :::");
         }
 
-        return null;
+        try {
+            String tagIni = "CONCEDE O PRESENTE LICENCIAMENTO À:";
+            String tagFim = "SECRETARIA MUNICIPAL DE SAÚDEDIRETORIA";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            return txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .trim();
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter NOME_EMPRESA_7 :::");
+        }
+
+        return "Não Localizado!";
     }
 }

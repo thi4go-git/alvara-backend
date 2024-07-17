@@ -86,6 +86,23 @@ public abstract class CnpjExtrator {
             LOG.error("::: Erro ao obter CNPJ_5 :::");
         }
 
+        try {
+            String tagIni = "VIGILÂNCIA SANITÁRIAALVARÁ SANITÁRIO";
+            String tagFim = "INSC. MUNICIPAL:";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String cnpj = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(".", "")
+                    .replace("/", "")
+                    .replace("-", "").trim();
+            if (cnpj.length() == TAMANHO_CNPJ) {
+                return cnpj;
+            }
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter CNPJ_6 :::");
+        }
+
         return "00000000000000";
     }
 }

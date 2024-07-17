@@ -75,51 +75,10 @@ public class ArquivoServiceImpl implements ArquivoService {
 
     @Override
     public Page<ArquivoProjection> listarTodosFilterMatcher(int page, int size, ArquivoFilterDTO dto) {
-
-        TipoDocumento tipoDocumento = null;
-
-        if (Objects.nonNull(dto.getTipoDoc()) && !dto.getTipoDoc().equals(TXT_TODOS) && !dto.getTipoDoc().isEmpty()) {
-            tipoDocumento = TipoDocumento.valueOf(dto.getTipoDoc());
-        }
-
-        StatusDocumento statusDocumento = null;
-
-        if (Objects.nonNull(dto.getStatusDocumento()) && !dto.getStatusDocumento().equals(TXT_TODOS) && !dto.getStatusDocumento().isEmpty()) {
-            statusDocumento = StatusDocumento.valueOf(dto.getStatusDocumento());
-        }
-
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, EXPIRA_STR);
-
-        if (tipoDocumento != null && statusDocumento != null) {
-            return this.aplicarFiltroComTipoDocEStatusDocEResto(dto, tipoDocumento, statusDocumento, pageRequest);
-        } else {
-            if (tipoDocumento != null) {
-                return this.aplicarFiltroComTipoDocEResto(dto, tipoDocumento, pageRequest);
-            } else {
-                if (statusDocumento != null) {
-                    return this.aplicarFiltroComStatusDocEResto(dto, statusDocumento, pageRequest);
-                } else {
-                    return this.aplicarFiltroSemTipoDocEStatusDoc(dto, pageRequest);
-                }
-            }
-        }
-    }
-
-    private Page<ArquivoProjection> aplicarFiltroComTipoDocEStatusDocEResto(ArquivoFilterDTO dto, TipoDocumento tipoDocumento, StatusDocumento statusDocumento, PageRequest pageRequest) {
-        return arquivoRepository.buscarArquivosPaginadosFilterComTipoDocEStatusDoc(dto.getNomeEmpresa().trim(), dto.getNumeroAlvara().trim(), dto.getCnpjEmpresa().trim(), tipoDocumento.ordinal(), statusDocumento.ordinal(), pageRequest);
-    }
-
-    private Page<ArquivoProjection> aplicarFiltroComTipoDocEResto(ArquivoFilterDTO dto, TipoDocumento tipoDocumento, PageRequest pageRequest) {
-        return arquivoRepository.buscarArquivosPaginadosFilterComTipoDoc(dto.getNomeEmpresa().trim(), dto.getNumeroAlvara().trim(), dto.getCnpjEmpresa().trim(), tipoDocumento.ordinal(), pageRequest);
-    }
-
-    private Page<ArquivoProjection> aplicarFiltroComStatusDocEResto(ArquivoFilterDTO dto, StatusDocumento statusDocumento, PageRequest pageRequest) {
-        return arquivoRepository.buscarArquivosPaginadosFilterComStatusDoc(dto.getNomeEmpresa().trim(), dto.getNumeroAlvara().trim(), dto.getCnpjEmpresa().trim(), statusDocumento.ordinal(), pageRequest);
-    }
-
-    private Page<ArquivoProjection> aplicarFiltroSemTipoDocEStatusDoc(ArquivoFilterDTO dto, PageRequest pageRequest) {
         return arquivoRepository.buscarArquivosPaginadosFilterSemTipoDoc(dto.getNomeEmpresa().trim(), dto.getNumeroAlvara().trim(), dto.getCnpjEmpresa().trim(), pageRequest);
     }
+
 
     @Override
     public Page<ArquivoProjection> listarVencidos(int page, int size) {

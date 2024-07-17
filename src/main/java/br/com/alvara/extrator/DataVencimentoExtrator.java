@@ -149,6 +149,27 @@ public class DataVencimentoExtrator {
             LOG.error("::: Erro ao obter DATA_VENCIMENTO_6 :::");
         }
 
+        try {
+            String tagIni = "VALIDADE: ";
+            String tagFim = "CADASTRO (CCP):";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .replace(TAG_DE, "/")
+                    .replace(BARRA_ZEMBRO, DEZEMBRO)
+                    .trim();
+            String[] objData = dataStr.split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_VENCIMENTO_7 :::");
+        }
+
         return null;
     }
 }

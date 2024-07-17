@@ -13,6 +13,4 @@ public class ArquivoFilterDTO {
     private String nomeEmpresa;
     private String cnpjEmpresa;
     private String numeroAlvara;
-    private String tipoDoc;
-    private String statusDocumento;
 }
