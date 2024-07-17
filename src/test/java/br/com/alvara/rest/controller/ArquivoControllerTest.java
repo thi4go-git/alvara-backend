@@ -79,7 +79,7 @@ class ArquivoControllerTest {
     @DisplayName("Deve salvar arquivo")
     @Order(1)
     void deveSalvarArquivo() {
-        byte[] conteudoArquivoMock = "ARQUIVO teste para gerar bytes mock".getBytes();
+        byte[] conteudoArquivoMock = "ARQUIVO teste para gerar bytes mock" .getBytes();
         InputStream inputStream = new ByteArrayInputStream(conteudoArquivoMock);
         var resposta = given()
                 .multiPart("pdf", "pdf.jpg", inputStream)
@@ -104,7 +104,7 @@ class ArquivoControllerTest {
     @DisplayName("Testar atualização de arquivos")
     @Order(2)
     void testarAtualizaçãoDoArquivo(String idArquivo) {
-        byte[] conteudoArquivoUpdateMock = "ARQUIVO Atualizado bytes mock".getBytes();
+        byte[] conteudoArquivoUpdateMock = "ARQUIVO Atualizado bytes mock" .getBytes();
         InputStream inputStream = new ByteArrayInputStream(conteudoArquivoUpdateMock);
         var resposta = given()
                 .multiPart("pdf", "pdf.jpg", inputStream)
@@ -138,9 +138,6 @@ class ArquivoControllerTest {
                 .nomeEmpresa("")
                 .cnpjEmpresa("")
                 .numeroAlvara("")
-                .tipoDoc("")
-                .statusDocumento("")
-                .statusDocumento("")
                 .build();
         ResponseEntity<Page<ArquivoProjection>> responseEntity = arquivoController.listarTodosFilterMatcher(0, 10, filtroDto);
         LOG.info(responseEntity.toString());
