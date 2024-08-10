@@ -10,6 +10,9 @@ import static br.com.alvara.utils.DataUtils.retornarMes;
 
 public abstract class DataEmissaoExtrator {
 
+    private DataEmissaoExtrator() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(DataEmissaoExtrator.class);
     private static final String SEPARADOR_COLCHETE_BARRA = "/";
     private static final String SEPARADOR_COLCHETE_VIRGULA = ",";
@@ -213,6 +216,46 @@ public abstract class DataEmissaoExtrator {
             return LocalDate.of(ano, mes, dia);
         } catch (Exception e) {
             LOG.error("::: Erro ao obter DATA_EMISSAO_10 :::");
+        }
+
+        try {
+            String tagIni = "CONSULTAS:64-34546650";
+            String tagFim = "COMERCIAL C-2";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .trim();
+            String[] objData = dataStr.split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_11 :::");
+        }
+
+        try {
+            String tagIni = "EXERCÍCIO DE 2024.GOIÂNIA,";
+            String tagFim = ".OBSERVAÇÕESESTE";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .replace(TAG_DE, "/")
+                    .replace(BARRA_ZEMBRO, DEZEMBRO)
+                    .trim();
+            String[] objData = dataStr.split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_EMISSAO_12 :::");
         }
 
         return null;

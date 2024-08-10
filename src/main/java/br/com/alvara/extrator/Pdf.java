@@ -61,7 +61,6 @@ public class Pdf {
 
 
     public TipoDocumento retornarTipoDocumento(String txt) {
-        System.out.println(txt);
         try {
             if (txt.contains("ALVARÁ DE LOCALIZAÇÃO E")) {
                 return TipoDocumento.ALVARA_FUNCIONAMENTO;

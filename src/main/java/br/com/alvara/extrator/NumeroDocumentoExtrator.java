@@ -71,6 +71,16 @@ public abstract class NumeroDocumentoExtrator {
             LOG.error("::: Erro ao obter NUMERO_DOCUMENTO_6 :::");
         }
 
+        try {
+            String tagIni = "ALVARÁ SANITÁRIO Nº";
+            String tagFim = "VALIDADE ATÉ";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            return txt.substring(ini, fim).replace(tagIni, "").trim();
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter NUMERO_DOCUMENTO_7 :::");
+        }
+
         return "Não Localizado!";
     }
 

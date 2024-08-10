@@ -36,5 +36,9 @@ public class ApplicationControllerAdvice {
         return new ResponseEntity<>(apiErrors, codigoStatus);
     }
 
-
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiErrors handleGeneralException(Exception ex) {
+        return new ApiErrors(ex.getMessage());
+    }
 }

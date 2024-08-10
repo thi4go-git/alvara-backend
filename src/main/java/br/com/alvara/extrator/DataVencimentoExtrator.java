@@ -170,6 +170,25 @@ public class DataVencimentoExtrator {
             LOG.error("::: Erro ao obter DATA_VENCIMENTO_7 :::");
         }
 
+        try {
+            String tagIni = "VALIDADE ATÉ :";
+            String tagFim = "A DIRETORIA DE VIGILÂNCIA";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            String dataStr = txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .replace(" ", "")
+                    .trim();
+            String[] objData = dataStr.split(SEPARADOR_COLCHETE_BARRA, -1);
+            int dia = Integer.parseInt(objData[0]);
+            int mes = Integer.parseInt(retornarMes(objData[1]));
+            int ano = Integer.parseInt(objData[2]);
+
+            return LocalDate.of(ano, mes, dia);
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter DATA_VENCIMENTO_8 :::");
+        }
+
         return null;
     }
 }

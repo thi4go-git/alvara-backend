@@ -86,6 +86,18 @@ public abstract class NomeEmpresaExtrator {
             LOG.error("::: Erro ao obter NOME_EMPRESA_7 :::");
         }
 
+        try {
+            String tagIni = "EMPRESA:RAZÃO SOCIAL";
+            String tagFim = "DENOMINAÇÃO";
+            int ini = txt.indexOf(tagIni);
+            int fim = txt.indexOf(tagFim);
+            return txt.substring(ini, fim)
+                    .replace(tagIni, "")
+                    .trim();
+        } catch (Exception e) {
+            LOG.error("::: Erro ao obter NOME_EMPRESA_8 :::");
+        }
+
         return "Não Localizado!";
     }
 }

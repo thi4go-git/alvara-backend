@@ -9,4 +9,4 @@ spring:
       max-request-size: -1
   info:
     app:
-      version: 2024.07.16
+      version: 2024.08.10
