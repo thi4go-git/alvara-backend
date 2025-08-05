@@ -5,3 +5,10 @@
 -Após subir, acesse o banco e crie um usuário inical administrador:
 insert into usuario (ativo,cpf,nome,password,role,username)
 values (true,'12345678901','admin','admin','ADMIN','admin')
+
+
+#ACTUATOR (logs, health, Metrics):
+http://localhost:8080/actuator
+
+-Logs:
+http://localhost:8080/actuator/logfile

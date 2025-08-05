@@ -10,3 +10,13 @@ spring:
   info:
     app:
       version: 2024.08.20
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  file:
+    name: ./logs/log-file.log
