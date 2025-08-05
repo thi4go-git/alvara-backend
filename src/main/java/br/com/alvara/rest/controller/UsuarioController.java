@@ -8,6 +8,7 @@ import br.com.alvara.service.implementation.UsuarioServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("api/usuarios")
+@Tag(name = "Usuários")
 public class UsuarioController {
 
     private static final String CAMPO_ID_OBRIGATORIO = "O campo ID é obrigatório!";

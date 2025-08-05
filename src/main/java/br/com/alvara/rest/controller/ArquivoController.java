@@ -13,12 +13,12 @@ import br.com.alvara.service.implementation.ArquivoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.servlet.http.Part;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -28,12 +28,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/alvara")
+@Tag(name = "Alvarás")
 public class ArquivoController {
 
 
     private static final String CAMPO_ID_OBRIGATORIO = "O campo id é obrigatório!";
     private static final String SERVER_ERROR = "Erro interno do servidor!";
     private static final String ARQUIVO_NOTFOUND = "Arquivo não localizado!";
+    private static final String NAO_AUTENTICADO = "Não autenticado.";
+
 
     @Autowired
     private ArquivoServiceImpl arquivoService;
@@ -62,6 +65,7 @@ public class ArquivoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "PDF Atualizado!"),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "404", description = ARQUIVO_NOTFOUND)
     })
     public ResponseEntity<Void> atualizarPdf(
@@ -76,6 +80,7 @@ public class ArquivoController {
     @Operation(summary = "Listar com Filtros", description = "Este endpoint Lista Paginandodo + Filtros")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Filtros aplicados"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Page<ArquivoProjection>> listarTodosFilterMatcher(
@@ -91,6 +96,7 @@ public class ArquivoController {
     @Operation(summary = "Listar Vencidos", description = "Este endpoint Lista Vencidos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listagem de vencidos"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Page<ArquivoProjection>> listarVencidos(
@@ -105,6 +111,7 @@ public class ArquivoController {
     @Operation(summary = "Lista que vencem até 60 dias", description = "Este endpoint Lista os que vencem até 60 dias")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Vencem em até 60 dias"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Page<ArquivoProjection>> listarVencerEmAte60Dias(
@@ -119,6 +126,7 @@ public class ArquivoController {
     @Operation(summary = "Lista os sem Informações", description = "Este endpoint Lista os sem Informações")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listgem dos sem Informações"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Page<ArquivoProjection>> listarDocumentosSemInfo(
@@ -133,6 +141,7 @@ public class ArquivoController {
     @Operation(summary = "Lista que vencem Após 60 dias", description = "Este endpoint Lista os que vencem Após 60 dias")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Vencem Após 60 dias"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Page<ArquivoProjection>> listarVencerApos60Dias(
@@ -148,6 +157,7 @@ public class ArquivoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listagem"),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "404", description = ARQUIVO_NOTFOUND)
     })
     public ResponseEntity<ArquivoDownloadDTO> buscarPorId(
@@ -162,6 +172,7 @@ public class ArquivoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Arquivo atualizado"),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "404", description = ARQUIVO_NOTFOUND)
     })
     public ResponseEntity<Void> atualizarPorBody(
@@ -176,6 +187,7 @@ public class ArquivoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Arquivo deletado"),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "404", description = ARQUIVO_NOTFOUND)
     })
     public ResponseEntity<Void> deletarPorId(
@@ -200,6 +212,7 @@ public class ArquivoController {
     @Operation(summary = "Listar tipos de Documento ", description = "Listagem tipos de Documento.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listado."),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<List<TipoDocumento>> tipoDocumentoList() {
@@ -211,6 +224,7 @@ public class ArquivoController {
     @Operation(summary = "Listar Status Documento ", description = "Listagem Status Documento.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listado"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<List<StatusDocumento>> statusDocumentoList() {
@@ -222,6 +236,7 @@ public class ArquivoController {
     @Operation(summary = "QTDE Total de arquivos", description = "QTDE Total")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Total de arquivos"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Long> totalArquivos() {
@@ -233,6 +248,7 @@ public class ArquivoController {
     @Operation(summary = "QTDE Total de arquivos vencidos", description = "QTDE Total vencidos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Total arquivos vencidos"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Integer> totalArquivosVencidos() {
@@ -244,6 +260,7 @@ public class ArquivoController {
     @Operation(summary = "QTDE Total vencer em 60 dias", description = "QTDE Total vencer em 60 dias")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Total vencer em 60 dias"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Integer> totalArquivosVencerEm60Dias() {
@@ -255,6 +272,7 @@ public class ArquivoController {
     @Operation(summary = "QTDE Total sem info.", description = "QTDE Total sem info")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "QTDE Total vencer em 60 dias"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Integer> totalArquivosSemInformacoes() {
@@ -266,6 +284,7 @@ public class ArquivoController {
     @Operation(summary = "QTDE Total vencer após 60 dias.", description = "QTDE Total vencer após 60 dias")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "QTDE Total vencer após 60 dias"),
+            @ApiResponse(responseCode = "401", description = NAO_AUTENTICADO),
             @ApiResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public ResponseEntity<Integer> totalArquivosVencerApos60Dias() {
