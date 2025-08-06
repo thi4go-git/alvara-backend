@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://cloudtecnologia.dynns.com:5432/alvara-hml
+    url: jdbc:postgresql://127.0.0.1:5431/
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: 895674
+    password: ??
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
@@ -12,14 +12,3 @@ spring:
         show_sql: false
     hibernate:
       ddl-auto: update
-  security:
-    enabled: true
-security:
-  oauth2:
-    client:
-      scope: password
-  jwt:
-    signing-key: cm9uYWxkaW5obw==
-    expiration_token_minutes: 30
-    client_id: my-angular-app
-    client_secret: '@321'

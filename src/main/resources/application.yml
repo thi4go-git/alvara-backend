@@ -1,15 +1,41 @@
 spring:
-  profiles:
-    active: production
   application:
-    name: Sistema de Alvarás WEB
+    name: ${SPRING_APPLICATION_NAME}
   servlet:
     multipart:
       max-file-size: -1
       max-request-size: -1
   info:
     app:
-      version: 2024.08.20
+      version: ${SPRING_APPLICATION_VERSION}
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+    url: jdbc:postgresql://${SPRING_DATASOURCE_HOST}:${SPRING_DATASOURCE_PORT}/${SPRING_DATASOURCE_BANCO}
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: ${JPA_FORMAT_SQL}
+        show_sql: ${JPA_SHOW_SQL}
+    hibernate:
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+  security:
+    enabled: ${SPRING_SECURITY_ENABLED}
+
+security:
+  oauth2:
+    client:
+      scope: password
+  jwt:
+    signing-key: ${SECURITY_JWT_KEY}
+    expiration_token_minutes: ${SECURITY_JWT_EXPIRATION}
+    client_id: ${SECURITY_JWT_CLIENT_ID}
+    client_secret: ${SECURITY_JWT_CLIENT_SECRET}
 
 management:
   endpoints:
@@ -20,3 +46,12 @@ management:
 logging:
   file:
     name: ./logs/log-file.log
+  level:
+    root: ${LOGGING_FILE_LEVEL_ROOT}
+# trace -  detalhado (Consome muito recurso)
+# debug - informações de depuração
+# warn - Avisos de advertencia (Memoria topando etc)
+
+
+springdoc:
+  override-with-generic-response: false

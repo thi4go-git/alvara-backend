@@ -34,3 +34,8 @@ nb-configuration.xml
 # patch
 *.orig
 *.rej
+
+# Environment
+.env
+
+log-file.log

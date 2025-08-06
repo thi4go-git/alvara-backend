@@ -1,6 +1,7 @@
 package br.com.alvara.rest.controller.advice;
 
 import br.com.alvara.exception.ApiErrors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class ApplicationControllerAdvice {
 
@@ -39,6 +41,7 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiErrors handleGeneralException(Exception ex) {
+        log.error("Erro handleGeneralException: {} ", ex.getMessage());
         return new ApiErrors(ex.getMessage());
     }
 }

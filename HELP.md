@@ -14,3 +14,10 @@ http://localhost:8080/swagger-ui/index.html
 
 # Obter token Oauth JTW:
 localhost:8080/oauth/token
+
+# Métricas:
+- Conexões Ativas JDBC:
+  http://localhost:8080/actuator/metrics/jdbc.connections.active
+
+- Memória em uso:
+  http://localhost:8080/actuator/metrics/jvm.memory.used
