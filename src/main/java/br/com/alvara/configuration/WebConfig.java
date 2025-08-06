@@ -12,7 +12,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 
-@Profile("production")
+@Profile("default")
 @Configuration
 public class WebConfig {
     @Bean

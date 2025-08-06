@@ -12,18 +12,18 @@ spring:
     ansi:
       enabled: ALWAYS
   datasource:
-    url: jdbc:postgresql://${SPRING_DATASOURCE_HOST}:${SPRING_DATASOURCE_PORT}/${SPRING_DATASOURCE_BANCO}
-    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: ${SPRING_JPA_DATABASE_PLATFORM}
     properties:
       hibernate:
-        format_sql: ${JPA_FORMAT_SQL}
-        show_sql: ${JPA_SHOW_SQL}
+        format_sql: ${SPRING_HIBERNATE_FORMAT_SQL}
+        show_sql: ${SPRING_HIBERNATE_SHOW_SQL}
     hibernate:
-      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+      ddl-auto: ${SPRING_HIBERNATE_DDL_AUTO}
   security:
     enabled: ${SPRING_SECURITY_ENABLED}
 
