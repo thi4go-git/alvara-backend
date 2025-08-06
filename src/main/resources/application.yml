@@ -42,6 +42,15 @@ management:
     web:
       exposure:
         include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+scrape_configs:
+  - job_name: 'spring-boot-app'
+    static_configs:
+      - targets: ['localhost:8080']
 
 logging:
   file:
