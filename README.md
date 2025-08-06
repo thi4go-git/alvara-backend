@@ -1,7 +1,25 @@
 # Subir Projeto:
-- Execulte o docker compose na pasta alvara-update/docker-compose.yml para que 
-o sistema suba em LOCALHOST (Subirá back+front).
+- Execulte o docker compose na pasta alvara-update/docker-compose.yml para que
+  o sistema suba em LOCALHOST (Subirá back+front).
 
--Após subir, acesse o banco e crie um usuário inical administrador:
-insert into usuario (ativo,cpf,nome,password,role,username) 
-values (true,'12345678901','admin','admin','ADMIN','admin')
+
+# ACTUATOR (logs, health, Metrics):
+http://localhost:8080/actuator
+
+# Logs:
+http://localhost:8080/actuator/logfile
+
+# Swagger:
+http://localhost:8080/swagger-ui/index.html
+
+# Obter token Oauth JTW:
+localhost:8080/oauth/token
+
+# Métricas:
+- Conexões Ativas JDBC:
+  http://localhost:8080/actuator/metrics/jdbc.connections.active
+
+- Memória em uso:
+  http://localhost:8080/actuator/metrics/jvm.memory.used
+
+- FIM
