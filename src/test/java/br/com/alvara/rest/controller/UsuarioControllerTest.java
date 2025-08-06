@@ -3,6 +3,7 @@ package br.com.alvara.rest.controller;
 import static org.junit.jupiter.api.Assertions.*;
 
 import br.com.alvara.rest.dto.UsuarioDTO;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
@@ -31,6 +32,12 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles("test")
 class UsuarioControllerTest {
+
+    @BeforeAll
+    static void loadEnv() {
+        Dotenv dotenv = Dotenv.configure().load();
+        dotenv.entries().forEach(e -> System.setProperty(e.getKey(), e.getValue()));
+    }
 
     @LocalServerPort
     private int port;

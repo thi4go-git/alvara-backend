@@ -1,15 +1,12 @@
 package br.com.alvara.rest.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import br.com.alvara.model.enums.TipoDocumento;
 import br.com.alvara.model.repository.projection.ArquivoProjection;
 import br.com.alvara.rest.dto.ArquivoDTO;
 import br.com.alvara.rest.dto.ArquivoFilterDTO;
-import br.com.alvara.rest.dto.UsuarioDTO;
 import br.com.alvara.service.implementation.ArquivoServiceImpl;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
@@ -21,7 +18,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +28,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -40,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,11 +43,20 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles("test")
 @RunWith(MockitoJUnitRunner.class)
 class ArquivoControllerTest {
+
+
+    @BeforeAll
+    static void loadEnv() {
+        Dotenv dotenv = Dotenv.configure().load();
+        dotenv.entries().forEach(e -> System.setProperty(e.getKey(), e.getValue()));
+    }
+
     @LocalServerPort
     private int port;
 
